@@ -1,0 +1,137 @@
+	if selected_character == Kim: 
+		if self.counter_stand==1:
+			self.updatecharacter(Player_Sprites.stand1)
+			self.rect.size=(int(21*2),int(52/3))
+		elif self.counter_stand==5:
+			self.updatecharacter(Player_Sprites.stand2)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==10:
+			self.updatecharacter(Player_Sprites.stand3)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==15:
+			self.updatecharacter(Player_Sprites.stand4)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==20:
+			self.updatecharacter(Player_Sprites.stand5)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==25:
+			self.updatecharacter(Player_Sprites.stand6)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==30:
+			self.updatecharacter(Player_Sprites.stand7)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==35:
+			self.updatecharacter(Player_Sprites.stand8)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==40:
+			self.updatecharacter(Player_Sprites.stand9)
+			self.rect.size=(int(22*2),int(52/3))
+		elif self.counter_stand==45:
+			self.updatecharacter(Player_Sprites.stand10)
+			self.rect.size=(int(21*2),int(52/3))
+		elif self.counter_stand==50:
+			self.updatecharacter(Player_Sprites.stand11)
+			self.rect.size=(int(21*2),int(52/3))
+		elif self.counter_stand==55:
+			self.updatecharacter(Player_Sprites.stand12)
+			self.rect.size=(int(20*2),int(52/3))
+		elif self.counter_stand==60:
+			self.updatecharacter(Player_Sprites.stand13)
+			self.rect.size=(int(20*2),int(52/3))
+		elif self.counter_stand==65:
+			self.updatecharacter(Player_Sprites.stand14)
+			self.rect.size=(int(20*2),int(52/3))
+		elif self.counter_stand==70:
+			self.updatecharacter(Player_Sprites.stand15)
+			self.rect.size=(int(20*2),int(52/3))
+		elif self.counter_stand==75:
+			self.updatecharacter(Player_Sprites.stand16)
+			self.rect.size=(int(20*2),int(52/3))
+
+	if selected_character == Kim: 
+		if self.counter_run==1:
+			self.updatecharacter(Player_Sprites.run1)
+			self.rect.size=(int(36*2),int(46/3))
+		elif self.counter_run==5:
+			self.updatecharacter(Player_Sprites.run1)
+			self.rect.size=(int(36*2),int(46/3))
+		elif self.counter_run==10:
+			self.updatecharacter(Player_Sprites.run2)
+			self.rect.size=(int(29*2),int(46/3))
+		elif self.counter_run==15:
+			self.updatecharacter(Player_Sprites.run3)
+			self.rect.size=(int(35*2),int(46/3))
+		elif self.counter_run==20:
+			self.updatecharacter(Player_Sprites.run4)
+			self.rect.size=(int(45*2),int(46/3))
+		elif self.counter_run==25:
+			self.updatecharacter(Player_Sprites.run5)
+			self.rect.size=(int(48*2),int(46/3))
+		elif self.counter_run==30:
+			self.updatecharacter(Player_Sprites.run6)
+			self.rect.size=(int(34*2),int(46/3))
+		elif self.counter_run==35:
+			self.updatecharacter(Player_Sprites.run7)
+			self.rect.size=(int(29*2),int(46/3))
+		elif self.counter_run==40:
+			self.updatecharacter(Player_Sprites.run8)
+			self.rect.size=(int(35*2),int(46/3))
+		elif self.counter_run==45:
+			self.updatecharacter(Player_Sprites.run9)
+			self.rect.size=(int(46*2),int(46/3))
+		elif self.counter_run==55:
+			self.updatecharacter(Player_Sprites.run10)
+			self.rect.size=(int(48*2),int(46/3))
+
+
+
+
+	elif selected_character == Kim: 
+		if self.counter_jump==15:
+			self.updatecharacter(Player_Sprites.jump1)
+			self.rect.size=(int(33*2),int(61/3))
+		elif self.counter_jump==20:
+			self.updatecharacter(Player_Sprites.jump2)
+			self.rect.size=(int(24*2),int(61/3))
+		elif self.counter_jump==25:
+			self.updatecharacter(Player_Sprites.jump3)
+			self.rect.size=(int(26*2),int(61/3))
+		elif self.counter_jump==30:
+			self.updatecharacter(Player_Sprites.jump4)
+			self.rect.size=(int(27*2),int(61/3))
+		elif self.counter_jump==35:
+			self.updatecharacter(Player_Sprites.jump5)
+			self.rect.size=(int(32*2),int(61/3))
+		elif self.counter_jump==40:
+			self.updatecharacter(Player_Sprites.jump6)
+			self.rect.size=(int(37*2),int(61/3))
+		elif self.counter_jump==45:
+			self.updatecharacter(Player_Sprites.jump7)
+			self.rect.size=(int(39*2),int(61/3))
+		elif self.counter_jump==50:
+			self.updatecharacter(Player_Sprites.jump8)
+			self.rect.size=(int(33*2),int(61/3))
+		elif self.counter_jump==55:
+			self.updatecharacter(Player_Sprites.jump9)
+			self.rect.size=(int(31*2),int(61/3))
+		elif self.counter_jump==60:
+			self.updatecharacter(Player_Sprites.jump10)
+			self.rect.size=(int(25*2),int(61/3))
+		elif self.counter_jump==65:
+			self.updatecharacter(Player_Sprites.jump11)
+			self.rect.size=(int(29*2),int(61/3))
+		elif self.counter_jump==70:
+			self.updatecharacter(Player_Sprites.jump12)
+			self.rect.size=(int(28*2),int(61/3))
+		elif self.counter_jump==75:
+			self.updatecharacter(Player_Sprites.jump13)
+			self.rect.size=(int(28*2),int(61/3))
+		elif self.counter_jump==80:
+			self.updatecharacter(Player_Sprites.jump14)
+			self.rect.size=(int(28*2),int(61/3))
+		elif self.counter_jump==85:
+			self.updatecharacter(Player_Sprites.jump15)
+			self.rect.size=(int(28*2),int(61/3))
+		elif self.counter_jump==90:
+			self.updatecharacter(Player_Sprites.jump16)
+			self.rect.size=(int(28*2),int(61/3))

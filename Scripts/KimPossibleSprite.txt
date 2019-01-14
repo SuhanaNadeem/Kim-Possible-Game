@@ -1,0 +1,250 @@
+character = pygame.Surface((21,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-14,-16))
+character = pygame.transform.scale(character, (int(21*1.5),int(52*1.5)))
+stand1 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-79,-15))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand2 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-79,-15))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand3 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-110,-14))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand4 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-143,-13))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand5 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-173,-12))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand6 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-208,-12))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand7 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-242,-13))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand8 = character
+
+character = pygame.Surface((22,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-272,-13))
+character = pygame.transform.scale(character, (int(22*1.5),int(52*1.5)))
+stand9 = character
+
+character = pygame.Surface((21,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-305,-13))
+character = pygame.transform.scale(character, (int(21*1.5),int(52*1.5)))
+stand10 = character
+
+character = pygame.Surface((21,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-336,-13))
+character = pygame.transform.scale(character, (int(21*1.5),int(52*1.5)))
+stand11 = character
+
+character = pygame.Surface((20,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-368,-15))
+character = pygame.transform.scale(character, (int(20*1.5),int(52*1.5)))
+stand12 = character
+
+character = pygame.Surface((20,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-399,-15))
+character = pygame.transform.scale(character, (int(20*1.5),int(52*1.5)))
+stand13 = character
+
+character = pygame.Surface((20,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-429,-15))
+character = pygame.transform.scale(character, (int(20*1.5),int(52*1.5)))
+stand14 = character
+
+character = pygame.Surface((20,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-463,-15))
+character = pygame.transform.scale(character, (int(20*1.5),int(52*1.5)))
+stand15 = character
+
+character = pygame.Surface((20,52),pygame.SRCALPHA)
+character.blit(spritesheet,(-493,-15))
+character = pygame.transform.scale(character, (int(20*1.5),int(52*1.5)))
+stand16 = character
+
+character = pygame.Surface((36,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-10,-84))
+character = pygame.transform.scale(character, (int(36*1.5),int(46*1.5)))
+run1 = character
+
+character = pygame.Surface((29,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-63,-84))
+character = pygame.transform.scale(character, (int(29*1.5),int(46*1.5)))
+run2 = character
+
+character = pygame.Surface((35,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-102,-84))
+character = pygame.transform.scale(character, (int(35*1.5),int(46*1.5)))
+run3 = character
+
+character = pygame.Surface((45,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-141,-85))
+character = pygame.transform.scale(character, (int(45*1.5),int(46*1.5)))
+run4 = character
+
+character = pygame.Surface((48,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-195,-83))
+character = pygame.transform.scale(character, (int(48*1.5),int(46*1.5)))
+run5 = character
+
+character = pygame.Surface((34,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-252,-87))
+character = pygame.transform.scale(character, (int(34*1.5),int(46*1.5)))
+run6 = character
+
+character = pygame.Surface((29,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-304,-86))
+character = pygame.transform.scale(character, (int(29*1.5),int(46*1.5)))
+run7 = character
+
+character = pygame.Surface((35,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-335,-88))
+character = pygame.transform.scale(character, (int(35*1.5),int(46*1.5)))
+run8 = character
+
+character = pygame.Surface((46,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-372,-87))
+character = pygame.transform.scale(character, (int(46*1.5),int(46*1.5)))
+run9 = character
+
+character = pygame.Surface((48,46),pygame.SRCALPHA)
+character.blit(spritesheet,(-428,-85))
+character = pygame.transform.scale(character, (int(48*1.5),int(46*1.5)))
+run10 = character
+
+character = pygame.Surface((33,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-10,-317))
+character = pygame.transform.scale(character, (int(33*1.5),int(61*1.5)))
+jump1 = character
+
+character = pygame.Surface((24,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-49,-319))
+character = pygame.transform.scale(character, (int(24*1.5),int(61*1.5)))
+jump2 = character
+
+character = pygame.Surface((26,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-92,-328))
+character = pygame.transform.scale(character, (int(26*1.5),int(61*1.5)))
+jump3 = character
+
+character = pygame.Surface((27,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-131,-330))
+character = pygame.transform.scale(character, (int(27*1.5),int(61*1.5)))
+jump4 = character
+
+character = pygame.Surface((32,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-164,-332))
+character = pygame.transform.scale(character, (int(32*1.5),int(61*1.5)))
+jump5 = character
+
+character = pygame.Surface((37,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-200,-330))
+character = pygame.transform.scale(character, (int(37*1.5),int(61*1.5)))
+jump6 = character
+
+character = pygame.Surface((39,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-242,-327))
+character = pygame.transform.scale(character, (int(39*1.5),int(61*1.5)))
+jump7 = character
+
+character = pygame.Surface((33,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-284,-326))
+character = pygame.transform.scale(character, (int(33*1.5),int(61*1.5)))
+jump8 = character
+
+character = pygame.Surface((31,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-324,-318))
+character = pygame.transform.scale(character, (int(31*1.5),int(61*1.5)))
+jump9 = character
+
+character = pygame.Surface((25,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-369,-322))
+character = pygame.transform.scale(character, (int(25*1.5),int(61*1.5)))
+jump10 = character
+
+character = pygame.Surface((29,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-407,-316))
+character = pygame.transform.scale(character, (int(29*1.5),int(61*1.5)))
+jump11 = character
+
+character = pygame.Surface((28,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-447,-316))
+character = pygame.transform.scale(character, (int(28*1.5),int(61*1.5)))
+jump12 = character
+
+character = pygame.Surface((28,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-486,-317))
+character = pygame.transform.scale(character, (int(28*1.5),int(61*1.5)))
+jump13 = character
+
+character = pygame.Surface((28,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-527,-317))
+character = pygame.transform.scale(character, (int(28*1.5),int(61*1.5)))
+jump14 = character
+
+character = pygame.Surface((28,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-572,-323))
+character = pygame.transform.scale(character, (int(28*1.5),int(61*1.5)))
+jump15 = character
+
+character = pygame.Surface((28,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-615,-325))
+character = pygame.transform.scale(character, (int(28*1.5),int(61*1.5)))
+jump16 = character
+
+character = pygame.Surface((100,100),pygame.SRCALPHA)
+character.blit(spritesheet,(0,0))
+character = pygame.transform.scale(character, (int(100/3),int(100/3)))
+test = character
+
+character = pygame.Surface((33,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-10,-317))
+character = pygame.transform.scale(character, (int(33/3),int(61/3)))
+jump1 = character
+
+character = pygame.Surface((24,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-49,-320))
+character = pygame.transform.scale(character, (int(24/3),int(61/3)))
+jump2 = character
+
+character = pygame.Surface((26,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-92,-328))
+character = pygame.transform.scale(character, (int(26/3),int(61/3)))
+jump3 = character
+
+character = pygame.Surface((27,61),pygame.SRCALPHA)
+character.blit(spritesheet,(-131,-324))
+character = pygame.transform.scale(character, (int(27/3),int(61/3)))
+jump4 = character
+
+character = pygame.Surface((32,47),pygame.SRCALPHA)
+character.blit(spritesheet,(-164,-332))
+character = pygame.transform.scale(character, (int(32/3),int(47/3)))
+jump6 = character
+
+character = pygame.Surface((33,49),pygame.SRCALPHA)
+character.blit(spritesheet,(-284,-326))
+character = pygame.transform.scale(character, (int(33/3),int(49/3)))
+jump10 = character
+
+character = pygame.Surface((32,49),pygame.SRCALPHA)
+character.blit(spritesheet,(-164,-330))
+character = pygame.transform.scale(character, (int(32/3),int(49/3)))
+jump11 = character
+

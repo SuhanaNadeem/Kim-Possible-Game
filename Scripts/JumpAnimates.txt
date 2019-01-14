@@ -1,0 +1,26 @@
+Only jump 10 and jump 11 from below are valid! The rest are tests.
+
+
+
+	elif selected_character == counter_jump: 
+		if self.counter_jump==1 and self.yvel<0:
+			self.updatecharacter(Player_Sprites.jump1)
+			self.rect.size=(int(33*2),int(61/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump2)
+			self.rect.size=(int(24*2),int(61/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump3)
+			self.rect.size=(int(26*2),int(61/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump4)
+			self.rect.size=(int(27*2),int(61/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump6)
+			self.rect.size=(int(32*2),int(47/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump10)
+			self.rect.size=(int(33*2),int(49/3))
+		elif self.yvel>=0:
+			self.updatecharacter(Player_Sprites.jump11)
+			self.rect.size=(int(32*2),int(49/3))
