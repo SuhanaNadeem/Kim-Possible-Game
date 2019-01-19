@@ -1,6 +1,11 @@
-Only jump 10 and jump 11 from below are valid! The rest are tests.
+"""
+When I was mapping Kim's jump sprites, I didn't specify the counter_jump, so the text files the SpriteMapping.py 
+program wrote to didn't have proper logic for the jump animation, so I mapped them again and made the program 
+write the animates to the this file.
 
-
+Only jump 10 and jump 11 from below are used in Game.py, because I decided to make my jump animation only two sprites.
+See Game.py for how I used this raw code that SpriteMapping.py and modified it for my jumploop.
+"""
 
 	elif selected_character == counter_jump: 
 		if self.counter_jump==1 and self.yvel<0:

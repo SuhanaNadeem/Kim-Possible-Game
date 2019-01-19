@@ -1,16 +1,19 @@
 """
-Global variables class that can be accessed from any file
+This class defines Global variables, to be accessed and  manipulated from any other file. 
 
-Author: Suhana Nadeem
+By: Suhana Nadeem
 """
 
-
 class Globals:
-    #menu_counter = 0
-    scene = "Menu"
-    isRunning = True
-    current_level = 1
-    coins = 0
-    player_health = 100
-    up = down = left = right = False
-    timer = 0
+    
+    scene = "Menu" # Initial scene is Menu.
+
+    isRunning = True # Gameplay is underway.
+
+    current_level = 1 # Inital level is Level 1.
+
+    coins = 0 # Kim has initially collected 0 coins. 
+
+    player_health = 100 # Kim is initially healthy.
+
+    up = down = left = right = False # Kim is not moving initially.

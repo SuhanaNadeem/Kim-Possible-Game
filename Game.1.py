@@ -1,282 +1,323 @@
 """This is the main game, which carries out all the core functionalities of the Kim Possible game. Doing basic Pygame tasks like
 displaying the screen, loading images and music, were learned and adapted from: Anthony Biron (), A Bit Racey Dude (), """
 
-# Importing all the main modules and functions I need for my game.
+# Importing all the main modules needed.
 import pygame
 from pygame import *
 import time
-import os
-from Scripts.Buttons import *
+from pygame import Rect
+import os # Used for bringing window to the centre of the screen. 
+
+# Importing other programs created in Scripts/Globals, so specific functions can be used.
+from Scripts.Buttons import * 
 from Scripts.GUI import *
 from Scripts.KeyInput import KeyInput_Handler
 from Scripts.Kim_Sprites import *
-from Globals import *
 from Scripts.Buttons import *
-from pygame import Rect
 from Scripts.GameObject_Sprites import *
+from Globals import *
 
+# Initializing all fonts needed.
 font_130pt = pygame.font.SysFont("Neucha", 130)
 font_30pt = pygame.font.SysFont("Neucha", 30)
 font_15pt = pygame.font.SysFont("Neucha", 15)
+font_25pt = pygame.font.SysFont("Neucha", 15)
 
-# Initializing Pygame so I can use all its functionalities.
+# Initializing Pygame to use all its functionalities.
 pygame.init()
 
-pygame.mixer.music.load("BGMusic.mp3") # Loading epic Kim Possible theme song!
-pygame.mixer.music.play(-1) # -1 for infinitely looping music!
-coinSound = pygame.mixer.Sound("Coin_Sound.wav")
+# Initializing music. 
+pygame.mixer.music.load("BGMusic.mp3") # Loading Kim Possible theme song.
+pygame.mixer.music.play(-1) # -1 for infinitely looping music.
+pygame.mixer.music.set_volume(0.5) # Setting volume for the music, so it's half the volume.
 
+# Initializing the coin sound effect, and setting its volume to full.
+coinSound = pygame.mixer.Sound("Coin_Sound.wav")
+coinSound.set_volume(1.0)
+
+# Initalizing the window width and height, which will be the size of the screen.
 WIN_WIDTH = 960
 WIN_HEIGHT = 540
 
-# Initializing some variables I will use to display my screen.
+# Setting variables for half the window width and height, for future reference (complex_camera function).
+HALF_WIDTH = WIN_WIDTH / float(2)
+HALF_HEIGHT = WIN_HEIGHT / float(2)
+ 
+# Initializing some variables used to display screen.
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
-DEPTH = 32
-FLAGS = 0
+DEPTH = 32 # The number of bits that will be used for colour in game.
+FLAGS = 0 # No additional built-in options for my display, so flags is 0.
 
-entities = pygame.sprite.Group()
-coingroup = pygame.sprite.Group()
+# Creating an entities group (will contain characters, game objects) in a list. 
+entities = pygame.sprite.Group() 
+# Creating a coin group (will contain all the coins) in a list. 
+coingroup = pygame.sprite.Group() 
 
+# Sets the scene to Game (Level 1) when the function is called, and increases the player's health.
 def Restart():
     Globals.scene = "Game"
+    pygame.mixer.music.pause()
+    Globals.player_health = 100
     Globals.current_level = 1
-    main()
+    main() # Main is called to re-initiate gameplay.
 
-# Restart Button
-btnRestart = Menu.Button(text="Restart", rect=(0, 0, 160, 60),
+# Restart button is made in the Main program (not Buttons.py) because it uses the Restart function here.
+btnRestart = Menu.Button(text="RESTART", rect=(0, 0, 160, 60),
                          bg=UltraColor.Fog, fg=UltraColor.White, bgr=UltraColor.Green, tag=("GameOver", None))
 btnRestart.Left = WIN_WIDTH - 442
 btnRestart.Top = WIN_HEIGHT - 320
 btnRestart.Command = Restart
 
-
-#Main function which intiates gameplay.
+# Main function starts the game.
 def main():
-    #Emptying Sprite Lists so that when game is Restarted, all previous sprites are deleted
+    # Emptying sprite lists so new sprites are created every time game is restarted.
     entities.empty()
     coingroup.empty()
   
-    # Moving Game Window to the Middle of the Screen.
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (200, 100)
+    # Centring the game window on user's screen using os library imported earlier.
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (200, 100) # 200, 100 is centre of screen.
     
     # Displaying the screen, window icon, caption, and initializing the timer.
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
     pygame.display.set_caption("Kim Possible")
-    #icon=pygame.image.load("Graphics\\Game_Icon.png")
-    #pygame.display.set_icon(icon)
+    icon=pygame.image.load("Graphics\\GameIcon.jpg")
+    pygame.display.set_icon(icon)
     timer = pygame.time.Clock()
 
-    #Creating Platforms list that will be 
+    # Creating platforms list that will contain all platform game objects.
     platforms = []
-    x = y = 0
 
-    #Setting Current Level and Adding Enemies to Groups, Powerups to Powerup group, Hearts to Powerup groups
+    x = y = 0 # Initalizing x and y to be manipulated later (in creating my platforms and character)
+
+    # Checking for the current level and adding coins to coingroup, displaying player to screen.
     if Globals.current_level==1:
-        #player = Kim(32*2, 32*14)
-        player = Kim(32*16, 32*4)
-        coingroup.add(Coin(32*10, 32*14))
+        player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
+        #player = Kim(32*16, 32*4)
+        # Adding coins to coin group by creating instances of the coin class to different places on screen.
+        coingroup.add(Coin(32*9, 32*14))
         coingroup.add(Coin(32*16, 32*13))
         coingroup.add(Coin(32*24, 32*14))
         coingroup.add(Coin(32*20, 32*8))
         coingroup.add(Coin(32*14, 32*8))
-        coingroup.add(Coin(32*10, 32*6))
+        coingroup.add(Coin(32*10, 32*7))
         coingroup.add(Coin(32*2, 32*2))
         coingroup.add(Coin(32*13, 32*2))
         coingroup.add(Coin(32*16, 32*3))
-        coingroup.add(Coin(32*2, 32*12))
+        coingroup.add(Coin(32*2, 32*13))
 
+        # Creating level list that will be iterated over.
         level = [
             "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
+            "L                            L",
             "L                          E L",
             "L                            L",
-            "L                            L",
-            "L    PPCAAAADPPCAADPPCAAAADPPL",
-            "L                            L",
-            "L                            L",
+            "L                   R        L",
+            "L    PPCAAAADPPCAADPPPCAAADPPL",
             "L                            L",
             "L                            L",
             "L                            L",
+            "L                            L",
+            "L           R          R     L",
             "LPPPCAAAADPPPPPPCAAAADPPPP   L",
             "L                            L",
             "L                            L",
             "L                            L",
-            "L                            L",
-            "L                            L",
-            "PPPPCAAAADPPPPPPPCAAAADPPAAPPP"]
+            "L            R               L",
+            "PPPPCAAADPPPPPPPPCAAADPPAAPPPP"]
 
     elif Globals.current_level == 2:
+        # Repeating steps taken with level 1, with coins at new places on the screen and new level layout.
         player = Kim(32*2, 32*14)
-        coingroup.add(Coin(32*9, 32*12))
+        coingroup.add(Coin(32*9, 32*13))
         coingroup.add(Coin(32*19, 32*13))
-        coingroup.add(Coin(32*27, 32*14))
+        coingroup.add(Coin(32*27, 32*12))
         coingroup.add(Coin(32*24, 32*8))
         coingroup.add(Coin(32*18, 32*8))
         coingroup.add(Coin(32*8, 32*6))
-        coingroup.add(Coin(32*4, 32*2))
-        coingroup.add(Coin(32*16, 32*2))
-        coingroup.add(Coin(32*19, 32*3))
-        coingroup.add(Coin(32*4, 32*12))
-        
+        coingroup.add(Coin(32*4, 32*3))
+        coingroup.add(Coin(32*16, 32*3))
+        coingroup.add(Coin(32*19, 32*4))
+        coingroup.add(Coin(32*4, 32*14))
+
         level = [
             "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
+            "L                            L",
             "L                          E L",
             "L                            L",
-            "L                            L",
-            "L    PPCAAAAADPPPCAAADPPCADPPL",
-            "L                            L",
-            "L                            L",
-            "L                            L",
-            "L                            L",
-            "L                            L",
-            "LPPPCAAADPPPCAAAADPPCAADPP   L",
+            "L             R              L",
+            "L    PPCAAAADPPPPCAAADPPCADPPL",
             "L                            L",
             "L                            L",
             "L                            L",
             "L                            L",
+            "L    R    R                  L",
+            "LPPPPCAADPPPCAAAADPPCAADPP   L",
             "L                            L",
-            "PPCAADPPPPCAAAAADPPCAADPPCAPPP"]
+            "L                            L",
+            "L                            L",
+            "L      R                R    L",
+            "PPCAADPPPPCAAADPPPCAADPPPCAPPP"]
 
     elif Globals.current_level == 3:
+        # Repeating steps taken with level 1 and 2, with coins at new places on the screen and new level layout.
+
         player = Kim(32*2, 32*14)
-        #player = Kim(32*18, 32*4)
+        #player = Kim(32*7, 32*4)
+
         coingroup.add(Coin(32*13, 32*13))
-        coingroup.add(Coin(32*18, 32*12))
-        coingroup.add(Coin(32*20, 32*13))
+        coingroup.add(Coin(32*18, 32*15))
+        coingroup.add(Coin(32*24, 32*13))
         coingroup.add(Coin(32*22, 32*7))
         coingroup.add(Coin(32*12, 32*7))
-        coingroup.add(Coin(32*8, 32*5))
-        coingroup.add(Coin(32*4, 32*3))
-        coingroup.add(Coin(32*7, 32*2))
-        coingroup.add(Coin(32*14, 32*4))
-        coingroup.add(Coin(32*4, 32*14))
-        
+        coingroup.add(Coin(32*8, 32*3))
+        coingroup.add(Coin(32*5, 32*9))
+        coingroup.add(Coin(32*15, 32*3))
+        coingroup.add(Coin(32*24, 32*2))
+        coingroup.add(Coin(32*6, 32*14))
+
         level = [
             "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
+            "L                            L",
             "L                          E L",
             "L                            L",
-            "L                            L",
+            "L           R                L",
             "L    PCAAADPPPCAAAADPPCAADPPPL",
             "L                            L",
             "L                            L",
             "L                            L",
             "L                            L",
-            "L                            L",
-            "LPPCAADPPCADPPCAADPPCAADPP   L",
-            "L                            L",
-            "L                            L",
+            "L            R               L",
+            "LPPCADPPCADPPPPCADPPCADPP    L",
             "L                            L",
             "L                            L",
             "L                            L",
-            "PPPCAAADPPCAAADPPCAAADPPCADPP"]
+            "L               R            L",
+            "PPPCAAADPPCAADPPPPCAADPPCADPPP"]
 
-    # Building the level by checking where each tile is in the list
-    for row in level:
-        for col in row:
-            if col == "P" or col == "E" or col == "p" or col == "C"or col == "A" or col == "D" or col=="L"  or col=="l" or col=="c"or col == "a" or col == "d"or col == "g" or col == "h" or col == "j":
-                p = Platform(x, y, col)
-                platforms.append(p)
-                entities.add(p)
-            x += 32
-        y += 32
-        x = 0
+    # Building the level by checking where each tile is in the level list.
+    for row in level: # The rows are the items in the list.
+        for col in row: # The columns are the indices in each item of the list.
+            if col == "P" or col == "E" or col == "p" or col == "C" or col == "A" or col == "D" or col == "L"  or col == "l" or col == "c" or col == "a" or col == "d" or col == "R":
+                p = Platform(x, y, col) # Creating an instance of the platform class (tile), passing its representative letter (col).
+                platforms.append(p) # Adding the tile to the platforms list.
+                entities.add(p) # Adding the tile to the entities list.
+            x += 32 # Moving 32 bits to the right once each column is iterated.
+        y += 32 # Moving 32 bits down once each row is iterated.
+        x = 0 # Setting x to 0 after each row is iterated, so columns iteration starts from the left.
 
-    #Setting window height and width using Level list that is sent to Camera Class
+    # Setting window height and width using the columns and rows in level list (in bits), and passing it in the camera class to track it.
     total_level_width = len(level[0]) * 32
     total_level_height = len(level) * 32
-    camera = Camera(complex_camera, total_level_width, total_level_height)
+    camera = Camera(complex_camera, total_level_width, total_level_height) # Passing the complex_camera class, and width and height of window and creating Camera class.
 
-    #Adding Player to entities class
-    entities.add(player)
-    Globals.coins = 0
+    entities.add(player) # Adding player to entities class.
+    Globals.coins = 0 # Setting the coins the player has collected to 0.
     
+    # The following will occur as long as the game is running.
     while Globals.isRunning:
-        timer.tick(60)
+
+        timer.tick(60) # Setting the FPS to 60.
         
-        # Processing Keyboard and Button Inputs.
+        # Checking for user input through events.
         for e in pygame.event.get():
+            # Quit the game if the user closes the window.
             if e.type == QUIT:
                 Globals.isRunning = False
-            KeyInput_Handler(e)
+            KeyInput_Handler(e) # Calling the KeyInput_Handler function from the KeyInput program to identify the event and update Globals variables accordingly.
+            # If the mouse button is pressed, carry out the command. 
             if e.type == pygame.MOUSEBUTTONDOWN:
-                if e.button == 1: 
-                    for btn in Menu.Button.All:
+                if e.button == 1: # The mouse button is pressed, so set this to True (1).
+                    for btn in Menu.Button.All: # From all the buttons, if the button is pressed and its tag (in Buttons.py) is the Game scene, carry out the button command (if it exists).
                         if btn.Tag[0] == Globals.scene and btn.Rolling:
                             if btn.Command != None:
                                 btn.Command() 
-                            #btnSound.play()
                             btn.Rolling == False
                             break  
-        
-        # Processing what happens if the user quits the game (the game stops running).
-        for e in pygame.event.get():
-            if e.type == QUIT:
-                isRunning = False
-        
-        # Depending on the Current Globals.scene, Display different things
+
+        # Displaying different pictures, buttons, etc. to the screen depending on the scene.
         if Globals.scene == "Menu":
             #Globals.menu_counter += 1
+            # Displaying the background image of the Menu scene.
             BackgroundImage = pygame.image.load("Graphics/MenuPic.jpg") 
             screen.blit(BackgroundImage, (0, 0))
-            pygame.display.flip()  
-                    
-            for btn in Menu.Button.All:
-                if btn.Tag[0] == "Menu":
+            pygame.display.flip() 
+            
+            # Creating the Play button with the Menu tag from Buttons.py.
+            for btn in Menu.Button.All: # Checking all the buttons from the GUI program.
+                if btn.Tag[0] == "Menu": # If the item at the first index of the Tag attribute of the button (which describes the scene) is Menu, display that button.
                     btn.Render(screen)
-            pygame.display.update()            
+            pygame.display.update() 
 
-        elif Globals.scene == "Pause":
-            pygame.mixer.music.pause()
+        elif Globals.scene == "Instructions":
+            # Displaying the background image of the Menu scene.
+            InstructionsImg = pygame.image.load("Graphics/InstructionsImg.jpg") 
+            screen.blit(InstructionsImg,(0,0))
+            pygame.display.flip() 
+           
+            # Creating the Play button with the Instructions tag from Buttons.py.
+            for btn in Menu.Button.All:
+                if btn.Tag[0] == "Instructions":
+                    btn.Render(screen)
+            pygame.display.update() 
 
         elif Globals.scene == "GameOver":
-            pygame.mixer.music.pause()
-            if Globals.current_level==3 and Globals.player_health != 0:
+            pygame.mixer.music.pause() # Pausing the music.
+            # If Kim's health is greater than 0, meaning the game is over because she cleared the last level, define congratulatory messages.
+       
+            if Globals.player_health > 0: 
                 End_Message=font_130pt.render("Fantastic!", 1, UltraColor.Black)
-                End_Bottom_Message=font_30pt.render("           You Won!", 1, UltraColor.Black)
+                End_Bottom_Message=font_30pt.render("       You Won!", 1, UltraColor.Black)
+            # Otherwise, it means the game is over because she hit an obstacle, so define appropriate end messages.
+          
             else:
                 End_Message=font_130pt.render("Nice Try!", 1, UltraColor.Black)
                 End_Bottom_Message=font_30pt.render("You Reached Level "+str(Globals.current_level), 1, UltraColor.Black)
+          
+            # Display the image for the game over screen (same as menu).
             GameOverImg = pygame.image.load("Graphics/MenuPic.jpg") 
             screen.blit(GameOverImg,(0,0))
+          
+            # Creating the Exit button with the GameOver tag from Buttons.py.
             for btn in Menu.Button.All:
                 if btn.Tag[0] == "GameOver":
                     btn.Render(screen)
+          
+            # Displaying both components of the end message to the screen (regardless of which conditional block was entered above).
             screen.blit(End_Message, (485,285))
             screen.blit(End_Bottom_Message, (600,450))
-            pygame.display.update()
+            pygame.display.update() 
 
         elif Globals.scene == "Game":
 
-            # Changing the background depending on the Globals.scene.
+            # Displaying a different background image based on the current level.
             if Globals.current_level==1:
                 L1_Image = pygame.image.load("Graphics/Level1.png") 
                 screen.blit(L1_Image,(0,0))
 
             elif Globals.current_level==2:
-                L2_Image = pygame.image.load("Graphics/Level1.png") 
+                L2_Image = pygame.image.load("Graphics/Level2.png") 
                 screen.blit(L2_Image,(0,0))
 
             elif Globals.current_level==3:
-                L3_Image = pygame.image.load("Graphics/Level1.png") 
+                L3_Image = pygame.image.load("Graphics/Level3.png") 
                 screen.blit(L3_Image,(0,0))
 
-            pygame.mixer.music.unpause()
+            pygame.mixer.music.unpause() # Playing the music, or continuing to play from where it stopped in GameOver.
             
-            #Blitting Sprites from different Groups
+            # Displaying coin sprites from the coingroup.
             for e in coingroup:
                 screen.blit(e.image,camera.apply(e))
                 e.update(platforms,entities)
-    
-            # update player, draw everything else
+
+            # Updating the player, her location, movement, and the platforms on the screen.
             player.update(Globals.up, Globals.down, Globals.left,
                         Globals.right, Globals.isRunning, platforms)
 
+            # Displaying the player and other game objects from the entities group.
             for e in entities:
                 screen.blit(e.image, camera.apply(e))
 
-            for btn in Menu.Button.All:
-                if btn.Tag[0] == "Game":
-                    btn.Render(screen)
-
+            # Checking how many coins the player has collected, displaying a small-scaled version of the coin and the number of coins to the top left of the screen.
             num_coins = "x " + str(Globals.coins)
             if Globals.coins==1:
                 screen.blit(GameObject_Sprites.coin,(9,9))
@@ -301,54 +342,56 @@ def main():
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
             elif Globals.coins==8:
                 screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (523, 0.5))
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
             elif Globals.coins==9:
                 screen.blit(GameObject_Sprites.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (520, 0.5))
             elif Globals.coins==10:
-                screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
-
-            if Globals.player_health<=0:
-                Globals.scene="GameOver"
-
-            pygame.display.flip()  
-            pygame.display.update()            
+                screen.blit(GameObject_Sprites.coin,(9,10))
+                screen.blit(font_25pt.render(num_coins, True, (UltraColor.Fog)), (30, 8))
+                screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (UltraColor.Fog)), (520, 0.5))
             
-            #Drawing Player Health Bar
-            pygame.draw.rect(screen,UltraColor.Green,(10,10,Globals.player_health*1.5,30))
-            """
-            #Blitting Enemy Health Bar if on level 3
-            if Globals..current_level==3:
-                pygame.draw.rect(screen,(97,97,97),(1030-Globals.boss_health*1.5,10,Globals.boss_health*1.5,30))  
-            """
+            # End the game if the player's health is ever lower than or equal to 0.
+            if Globals.player_health <= 0:
+                Globals.scene = "GameOver"
+
+            # Updating the screen.
+            pygame.display.flip() 
+            pygame.display.update()            
 
 """
-Below is a Camera Class that targets the Player.  
-The Camera Class and Complex Camera function were borrowed from Anthony Biron(https://www.youtube.com/watch?v=FpufbRZxKRM).
+The following Camera Class and Complex Camera function were borrowed from Anthony Biron (https://www.youtube.com/watch?v=FpufbRZxKRM).
 This complex camera function follows my player until he hits the edge of the map
 """
+
+# This class helps me track the location and movement of the entities in my game (like coins, player, etc.).
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
-        self.state = Rect(0, 0, width, height)
+        self.state = Rect(0, 0, width, height) # Defining field of vison from top left corner.
 
     def apply(self, target):
-        return target.rect.move(self.state.topleft)
+        return target.rect.move(self.state.topleft) # Detects if the entity is in motion.
 
     def update(self, target):
-        self.state = self.camera_func(self.state, target.rect)
-#Complex Camera That follows the Player
+        self.state = self.camera_func(self.state, target.rect) # Will update when it sees the movement of the entity.
+"""
+def complex_camera(camera, target_rect):
+    x, y, w, h = target_rect
+    return Rect(HALF_WIDTH - x, HALF_HEIGHT - y, w, h)
+"""
+# The complex camera tracks entities from a fixed point of view.
 def complex_camera(camera, target_rect):
     l, t, _, _ = target_rect
     _, _, w, h = camera
     l, t, _, _ = -l + HALF_WIDTH, -t + HALF_HEIGHT, w, h
 
-    l = min(0, l)                           # stop scrolling at the left edge
-    # stop scrolling at the right edge
+    l = min(0, l) 
     l = max(-(camera.width - WIN_WIDTH), l)
-    t = max(-(camera.height - WIN_HEIGHT), t)  # stop scrolling at the bottom
-    t = min(0, t) # stop scrolling at the top
+    t = max(-(camera.height - WIN_HEIGHT), t) 
+    t = min(0, t) 
     return Rect(l, t, w, h)
 
 class Entity(pygame.sprite.Sprite):
@@ -371,13 +414,6 @@ class Kim(Entity):
         self.counter_run = 0
         self.counter_jump = 0
         self.onGround = False
-        """
-        self.up = False
-        self.down = False
-        self.right = False
-        self.left = False
-        """
-        #self.fade=True
 
         self.moving = False
         self.airborne = False
@@ -405,16 +441,16 @@ class Kim(Entity):
                 pass
 
             if left:
-                self.xvel = -8               
+                self.xvel = -11               
                 self.faceright = False
 
             if right:
-                self.xvel = 8
+                self.xvel = 11
                 self.faceright = True
                 
             if not self.onGround:
                 self.yvel += 0.6
-                # max falling speed
+                # Maximum falling speed.
                 if self.yvel > 100:
                     self.yvel = 100
 
@@ -449,44 +485,8 @@ class Kim(Entity):
                 self.airborne = True
             else:
                 self.airborne=False
-        print( self.yvel)
+        #print( self.yvel)
         self.animate()
-    """
-    def collide(self, xvel, yvel, platforms,up,down,left,right):
-        for p in platforms:
-            if pygame.sprite.collide_rect(self, p):
-              #  if isinstance(p, ExitBlock):
-               #     pygame.event.post(pygame.event.Event(QUIT))
-                if p.tile=="E" and Globals.keys>=3:
-                    
-                    p.change_level()
-                    self.fade=False
-                    
-                    self.destroyed=True
-                    self.rect.midbottom=p.rect.midbottom           
-                else:
-                    if xvel==0 and yvel==0 and self.faceright:
-                        self.rect.right=p.rect.left
-                    if xvel > 0:
-                        self.rect.right = p.rect.left
-                    if xvel < 0:
-                        self.rect.left = p.rect.right
-                    if yvel > 0:
-                        if p.tile=="A":
-                            self.health-=10
-                            Globals.player_health=self.health
-                        self.rect.bottom = p.rect.top
-                        self.onGround = True
-                        self.counter_jump=0
-                        self.airborne = False
-                        self.yvel = 0
-                    if yvel < 0:
-                        self.rect.top = p.rect.bottom
-            else:
-                if p.tile=="E" and (Globals.keys>=3 or Globals.boss_health<=0):
-                    # p.door_ready()
-                    pass
-"""
 
     def collide(self, xvel, yvel, platforms, up, down, left, right):
 
@@ -496,47 +496,50 @@ class Kim(Entity):
                 if p.tile=="E":
                     p.change_level()
                     self.fade=False
-                    
                     self.destroyed=True
                     self.rect.midbottom=p.rect.midbottom           
 
                 else:
                     if xvel==0 and yvel==0 and self.faceright:
                         self.rect.right=p.rect.left
-                        
-                    if xvel > 0:
+
+                    if xvel > 0:                        
                         self.rect.right = p.rect.left
-                        if self.airborne and left:
-                            self.xvel = -8
-                            self.yvel = -8
-                        print ("collide right")
-                    if xvel < 0:
-                        self.rect.left = p.rect.right
-                        if right:
-                            self.xvel =8
-                            self.yvel = -8
-                        print ("collide left")
-                    if yvel > 0:
-                        if p.tile=="A":
-                            #self.rect.bottom = p.rect.top+25
+                        if p.tile=="A" or p.tile=="R":
                             self.health=0
+                            Globals.player_health = self.health
                             self.destroyed=True
                             self.dead()
+
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        if p.tile=="A" or p.tile=="R":
+                            self.health=0
+                            Globals.player_health = self.health
+                            self.destroyed=True
+                            self.dead()
+
+                    if yvel > 0:
+                        if p.tile=="A" or p.tile=="R":
+                            self.health=0
+                            Globals.player_health = self.health
+                            self.destroyed=True
+                            self.dead()
+                        
                         self.rect.bottom = p.rect.top
                         self.onGround = True
                         self.counter_jump = 0
-                        #self.airborne = False
+                        self.airborne = False
                         self.yvel = 0
-                        """
-                        else:
-                            self.rect.bottom = p.rect.top
-                        """
+
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
+                        
+                        #touching top
+                        if (self.rect.top <= p.rect.bottom):
+                            #print("touching")
+                            self.yvel+=1.3
                 
-            else:
-                if p.tile=="E" and Globals.keys>=3:
-                    p.door_ready()
                 """
                 if p.tile=="E":
                     if Globals.current_level == 3:
@@ -580,12 +583,13 @@ class Kim(Entity):
                     self.jumploop()
                     self.counter_run = 0
                 else:
-                    print ("stand")
+                    #print ("stand")
                     self.standloop()
     
     def dead(self):
-        Globals.player_health = 0
+        pygame.mixer.music.pause()
         Globals.scene="GameOver"
+        Globals.player_health = 0
 
     def updatecharacter(self, ansurf):
         if not self.faceright:
@@ -593,7 +597,7 @@ class Kim(Entity):
         self.image = ansurf
     
     def standloop(self):
-        print ("entered stand loop")
+        #print ("entered stand loop")
         if self.counter_stand==1:
             self.updatecharacter(Kim_Sprites.stand1)
             self.rect.size=(21*1.5, 52*1.5)
@@ -644,125 +648,69 @@ class Kim(Entity):
             self.updatecharacter(Kim_Sprites.stand16)
             self.rect.size=(int(20*2),int(52/3))
             """
-            print("last stand")
+            #print("last stand")
             self.counter_stand = 0
         self.counter_stand += 1
-        print(self.counter_stand)
+        #print(self.counter_stand)
 
     def runloop(self):
         if self.counter_run==1:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 52*1.5)
-        elif self.counter_run==3:
+        elif self.counter_run==2:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 52*1.5)
-        elif self.counter_run==5:
+        elif self.counter_run==3:
             self.updatecharacter(Kim_Sprites.run2)
             self.rect.size=(29*1.5, 52*1.5)
-        elif self.counter_run==7:
+        elif self.counter_run==4:
             self.updatecharacter(Kim_Sprites.run3)
             self.rect.size=(35*1.5, 52*1.5)
-        elif self.counter_run==9:
+        elif self.counter_run==5:
             self.updatecharacter(Kim_Sprites.run4)
             self.rect.size=(45*1.5, 52*1.5)
-        elif self.counter_run==11:
+        elif self.counter_run==6:
             self.updatecharacter(Kim_Sprites.run5)
             self.rect.size=(48*1.5, 52*1.5)
-        elif self.counter_run==13:
+        elif self.counter_run==7:
             self.updatecharacter(Kim_Sprites.run6)
             self.rect.size=(34*1.5, 52*1.5)
-        elif self.counter_run==15:
+        elif self.counter_run==8:
             self.updatecharacter(Kim_Sprites.run7)
             self.rect.size=(29*1.5, 52*1.5)
-        elif self.counter_run==17:
+        elif self.counter_run==9:
             self.updatecharacter(Kim_Sprites.run8)
             self.rect.size=(35*1.5, 52*1.5)
-        elif self.counter_run==19:
+        elif self.counter_run==10:
             self.updatecharacter(Kim_Sprites.run9)
             self.rect.size=(52*1.5, 52*1.5)
-        elif self.counter_run==21:
-            """
-            self.updatecharacter(Kim_Sprites.run10)
-            self.rect.size=(int(48*2),int(52/3))
-            """
+        elif self.counter_run==11:
             self.counter_run = 0
         self.counter_run+=1
 
     def jumploop(self):
         #self.counter_jump += 1
-        if self.yvel<0:
+        if self.yvel < 0:
             #print("I entered")
             self.updatecharacter(Kim_Sprites.jump11)
             self.rect.size=(int(33*1.5),int(52*1.5))
-        elif self.yvel>=0:
+        elif self.yvel >= 0:
             #print("Im working")
             self.updatecharacter(Kim_Sprites.jump10)
             self.rect.size=(int(32*1.5),int(52*1.5))
-
-        """
-        if self.counter_jump == 1 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump1)
-            self.rect.size=(33*1.5, 52*1.5)
-        elif self.counter_jump == 5 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump2)
-            self.rect.size=(24*1.5, 52*1.5)
-        elif self.counter_jump == 10 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump3)
-            self.rect.size=(26*1.5, 52*1.5)
-        elif self.counter_jump==15 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump4)
-            self.rect.size=(27*1.5, 52*1.5)
-        elif self.counter_jump==20 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump5)
-            self.rect.size=(32*1.5, 52*1.5)
-        elif self.counter_jump==25 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump6)
-            self.rect.size=(37*1.5, 52*1.5)
-        elif self.counter_jump==30 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump7)
-            self.rect.size=(39*1.5, 52*1.5)
-        elif self.counter_jump==35 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump8)
-            self.rect.size=(33*1.5, 52*1.5)
-        elif self.counter_jump==40 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump9)
-            self.rect.size=(31*1.5, 52*1.5)
-        elif self.counter_jump==45 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump10)
-            self.rect.size=(25*1.5, 52*1.5)
-        elif self.counter_jump==50 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump11)
-            self.rect.size=(29*1.5, 52*1.5)
-        elif self.counter_jump==55 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump12)
-            self.rect.size=(28*1.5, 52*1.5)
-        elif self.counter_jump==60 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump13)
-            self.rect.size=(28*1.5, 52*1.5)
-        elif self.counter_jump==65 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump14)
-            self.rect.size=(28*1.5, 52*1.5)
-        elif self.counter_jump==70 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump15)
-            self.rect.size=(28*1.5, 52*1.5)
-        elif self.counter_jump==75 and self.yvel<0:
-            self.updatecharacter(Kim_Sprites.jump16)
-            self.rect.size=(28*1.5, 52*1.5)
-        """
 
 class Coin(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
         self.destroyed = False
-        self.counter_dead=0
-        self.x=x
-        self.y=y
+        self.counter_dead = 0
+        self.x = x
+        self.y = y
         self.image = GameObject_Sprites.coin
         self.rect = Rect(x, y, 16, 16)
 
     def update(self, platforms, entities):
         self.collide(platforms, entities)
-        self.collide( platforms, entities)
         self.animate()
         
     def collide(self, platforms, entities):
@@ -777,72 +725,52 @@ class Coin(Entity):
             self.destroyloop()
 
     def destroyloop(self):
-        if self.counter_dead == 0:
-            Globals.coins+=1
-            self.kill()
+        Globals.coins+=1
+        self.kill()
 
 #Platform Class that handles blitting specific tiles depending on the type of letter in the levels list
 class Platform(Entity):
     def __init__(self, x, y, tile):
         Entity.__init__(self)
         self.counter_change = 0
-        self.tile=tile
+        self.tile = tile
         
         if self.tile=="E":
-
             self.image = pygame.image.load("Graphics/DoorClosed.png")
+        elif self.tile=="R":
+            self.image = pygame.image.load("Graphics/Rock.png")
         elif self.tile=="P":
-            self.image = pygame.image.load("Graphics/Tile (2).png").convert()
+            self.image = pygame.image.load("Graphics/Tile2.png").convert()
         elif self.tile=="C":
-            self.image = pygame.image.load("Graphics/Tile (3a).png").convert()
+            self.image = pygame.image.load("Graphics/Tile1.png").convert()
         elif self.tile=="A":
-            self.image = pygame.image.load("Graphics/Acid (1).png")
+            self.image = pygame.image.load("Graphics/Lava.png")
         elif self.tile=="D":
-            self.image = pygame.image.load("Graphics/Tile (1a).png").convert()
+            self.image = pygame.image.load("Graphics/Tile3.png").convert()
         elif self.tile=="L":
-            self.image = pygame.image.load("Graphics/BGTile (4).png").convert()
-        elif self.tile=="l":
-            self.image = pygame.image.load("Graphics/BGTile (3).png").convert()
-        elif self.tile=="g":
-            self.image = pygame.image.load("Graphics/Tile (12).png")
-        elif self.tile=="h":
-            self.image = pygame.image.load("Graphics/Tile (13).png")
-        elif self.tile=="j":
-            self.image = pygame.image.load("Graphics/Tile (14).png")
-        elif self.tile=="c":
-            self.image = pygame.image.load("Graphics/Tile (6a).png")
-        elif self.tile=="a":
-            self.image = pygame.image.load("Graphics/Acid (2).png")
-        elif self.tile=="d":
-            self.image = pygame.image.load("Graphics/Tile (4a).png")
-        elif self.tile=="p":
-            self.image = pygame.image.load("Graphics/Tile (5).png")
-        elif self.tile=="p":
-            self.image = pygame.image.load("Graphics/Tile (5).png")        
+            self.image = pygame.image.load("Graphics/Tile4.png").convert()
+
         if self.tile=="E":
             self.image = pygame.transform.scale(self.image, (58,96))
         else:
             self.image = pygame.transform.scale(self.image, (32,32))
         
-
         if self.tile=="E":
-            self.rect = Rect(x, y,58,96)
-
-        elif self.tile=="g" or  self.tile=="h" or  self.tile=="j":
-            self.rect = Rect(x, y, 32, 16)  # change according to pic width
+            self.rect = Rect(x, y, 58, 96)
+        
         else:
             self.rect = Rect(x, y, 32, 32)  # change according to pic width
             
-    def door_ready(self):
-        self.image= GameObject_Sprites.Door_Ready
-
     #Changing Door sprite when player collects 3 keys
     def change_level(self):
         if self.counter_change==1:
-            self.image= GameObject_Sprites.Door_Open
+            self.image = GameObject_Sprites.Door_Open
         elif self.counter_change==2:
-            Globals.current_level+=1
-            main()     
+            if Globals.current_level == 3:
+                Globals.scene = "GameOver"
+            else:
+                Globals.current_level+=1
+                main()     
         self.counter_change+=1
     
     def update(self):
@@ -850,18 +778,3 @@ class Platform(Entity):
 
 main()
 pygame.quit()
-
-
-"""
-
-gameDisplay = pygame.display.set_mode((900, 500))
-pygame.display.set_caption("Kim Possible")
-
-BackgroundImage = pygame.image.load("Graphics/Background.png")
-counter=0
-while(counter<=100):
-   gameDisplay.blit(BackgroundImage, (0, 0))
-   counter+=1
-   pygame.display.flip()
-
-"""

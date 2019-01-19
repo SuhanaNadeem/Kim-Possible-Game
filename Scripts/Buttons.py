@@ -25,7 +25,7 @@ class Buttons(object):
         Globals.isRunning = False # The game has stopped running.
     
     def Play_Instructions():
-        # Perform tasks defined for the Game screen (initate gameplay).
+        # Perform tasks defined for the Game screen (initiate gameplay).
         Globals.scene = "Game"
 
 """
@@ -39,9 +39,14 @@ represents where my button will be displayed.
 WIN_WIDTH = 960
 WIN_HEIGHT = 540
 
+# Defining the RGB values of the colours needed.
+Fog = (20, 20, 20)
+White = (255, 255, 255)
+Green = (0, 128, 0)
+
 # Play button that will go on the Instructions screen, and make the screen Game (initiates gameplay).
 btnPlay_Instructions = Menu.Button(text="START", rect=(0, 0, 150, 75),
-                      bg=UltraColor.Fog, fg=UltraColor.White, bgr=UltraColor.Green, tag=("Instructions", None))
+                      bg=Fog, fg=White, bgr=Green, tag=("Instructions", None))
 # The above is creating an instance of the class.
 btnPlay_Instructions.Left = 215 # Defining the x-axis position of the button (from the left)
 btnPlay_Instructions.Top = WIN_HEIGHT - 120 # Defining y-axis position of the button (from the top)
@@ -49,21 +54,21 @@ btnPlay_Instructions.Command = Buttons.Play_Instructions # Defining the command 
 
 # Play button that will go on the Menu screen, and make the screen Instructions (displays the instructions).
 btnPlay_Menu = Menu.Button(text="PLAY", rect=(0, 0, 150, 75),
-                      bg=UltraColor.Fog, fg=UltraColor.White, bgr=UltraColor.Green, tag=("Menu", None))
+                      bg=Fog, fg=White, bgr=Green, tag=("Menu", None))
 btnPlay_Menu.Left = 525
 btnPlay_Menu.Top = WIN_HEIGHT - 230
 btnPlay_Menu.Command = Buttons.Play_Menu
 
 # Exit button that will go on the Menu screen, and exit the game.
-btnExit = Menu.Button(text="EXIT", rect=(0, 0, 150, 75), bg=UltraColor.Fog,
-                      fg=UltraColor.White, bgr=UltraColor.Green, tag=("Menu", None))
+btnExit = Menu.Button(text="EXIT", rect=(0, 0, 150, 75), bg=Fog,
+                      fg=White, bgr=Green, tag=("Menu", None))
 btnExit.Left = btnPlay_Menu.Left + 200
 btnExit.Top = btnPlay_Menu.Top 
 btnExit.Command = Buttons.Exit
 
 # Exit button that will go on the GameOver screen, and exit the game.
-btnExit2 = Menu.Button(text="EXIT", rect=(0, 0, 160, 60), bg=UltraColor.Fog,
-                       fg=UltraColor.White, bgr=UltraColor.Green, tag=("GameOver", None))
+btnExit2 = Menu.Button(text="EXIT", rect=(0, 0, 160, 60), bg=Fog,
+                       fg=White, bgr=Green, tag=("GameOver", None))
 btnExit2.Left = WIN_WIDTH - 244
 btnExit2.Top = WIN_HEIGHT - 320
 btnExit2.Command = Buttons.Exit

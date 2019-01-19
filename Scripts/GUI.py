@@ -1,23 +1,22 @@
 """
-My source for this program is:
-Meloonatic Melons
-GUI Framework
+The following GUI Framework was borrwed from: Meloonatic Melons.
 By: Harry Hitchen
-
 This source was referred to me by my brother, Sufiyaan Nadeem.
 
-This is a program I borrowed, which helps me make buttons, with text and tags (that I access from main),
+This is a program helps me make buttons, with text and tags (that I access from my main program),
 and allows the user to interact with them, with a hover-over functionality. 
 
 Given that this is a small part of my game's functionality and a multistep process complex, creating 
 this GUI framework myself would take too long and be unnecessary.
 
+Modified and commented by: Suhana Nadeem
 """
 
-import pygame
-from Scripts.UltraColor import *
+import pygame 
 
-pygame.init()
+pygame.init() # Initializing all pygame functionalities.
+
+Lime = (0, 255, 0) # Defining the colour needed.
 
 # This function locates the position of the mouse on the screen, and checks if the mouse touches the button rectangles.
 def MouseOver(rect):
@@ -53,7 +52,7 @@ class Menu:
                 (self.Width, self.Height), pygame.HWSURFACE | pygame.SRCALPHA)
             self.Normal.fill(bg)
             RText = font.render(text, True, fg) # Creating the text.
-            txt_rect = RText.get_rect() # Creating the rectangle. 
+            txt_rect = RText.get_rect() # Creating the surface rectangle. 
             self.Normal.blit(RText, (self.Width / 2 - txt_rect[2] / 2, self.Height / 2 - txt_rect[3] / 2)) 
 
             # Hovered-over button.
@@ -81,7 +80,7 @@ class Menu:
         All = []
 
         # The text is created with set properties (colour, etc.), which I will use when creating the math.
-        def __init__(self, text, font=Font.Default, color=UltraColor.Lime, bg=None):
+        def __init__(self, text, font=Font.Default, color=Lime, bg=None):
             self.Text = text
             self.LastText = text
             self.Font = font
@@ -107,7 +106,7 @@ class Menu:
                 self.LastText = self.Text
 
                 # Recreating the Bitmap to render new text.
-                bitmap = self.Font.render(self.Text, True, self.UltraColor)
+                bitmap = self.Font.render(self.Text, True, self.Color)
                 self.Bitmap = pygame.Surface(
                     bitmap.get_size(), pygame.SRCALPHA | pygame.HWSURFACE)
                 if self.Bg != None:

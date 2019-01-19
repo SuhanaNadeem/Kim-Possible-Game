@@ -1,3 +1,13 @@
+"""
+The following is one of the two text files that SpriteMapping.py wrote to as I mapped each of Kim's sprites.
+
+This is the raw code that program created, but I has to customize it. Essentially, it saved me time by formatting
+each sprite's surface creation, blitting, and scaling. Most importantly, what SpriteMapping.py wrote to this text
+file gave me the location of each sprite on the spritesheet as well as its size.
+
+This is used in Kim_Sprites.py.
+"""
+
 character = pygame.Surface((21,52),pygame.SRCALPHA)
 character.blit(spritesheet,(-14,-16))
 character = pygame.transform.scale(character, (int(21*1.5),int(52*1.5)))

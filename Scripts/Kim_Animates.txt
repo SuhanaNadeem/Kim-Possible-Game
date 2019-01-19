@@ -1,3 +1,16 @@
+"""
+The following is one of the two text files that SpriteMapping.py wrote to as I mapped each of Kim's sprites.
+
+This is the raw code that program created, but I has to customize it. Essentially, it saved me time by formatting
+the calling of updatecharacter on each sprite and creating its rectsize. I had to change the rectsize so each sprite
+is scaled to my choice, and also changed the if and elif statement numbers (1, 5, 10, etc.) so they are closer together;
+and the animation occurs faster.
+
+I also modified the logic of this raw code, especially in my jumploop, so the animation loops ran as I wanted.
+
+This is used in Game.py; the runloop, jumploop, and standloop. Visit that program for more details.
+"""
+
 	if selected_character == Kim: 
 		if self.counter_stand==1:
 			self.updatecharacter(Player_Sprites.stand1)

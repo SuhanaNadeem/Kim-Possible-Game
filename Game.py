@@ -1,7 +1,17 @@
-"""This is the main game, which carries out all the core functionalities of the Kim Possible game. Doing basic Pygame tasks like
-displaying the screen, loading images and music, were learned and adapted from: Anthony Biron (), A Bit Racey Dude (), """
+"""
+This is the main program. It carries out all the core functionalities of my Kim Possible game. 
 
-# Importing all the main modules needed.
+I learned how to manipulate standard Pygame functionalities (displaying the screen, manipulating 
+sprites, loading images, etc.) from the following sources:
+- Anthony Biron (https://www.youtube.com/channel/UCy0eKoY5BVtcJHFQGKVe1yg)
+- SentDex (https://www.youtube.com/user/sentdex)
+- My brother, Sufiyaan Nadeem (https://github.com/SufiyaanNadeem) 
+Pygame documentation (https://www.pygame.org/docs/).
+
+Any code that I have borrowed has been referenced where it is found.
+"""
+
+# Importing all the main modules/functions needed.
 import pygame
 from pygame import *
 import time
@@ -11,7 +21,7 @@ import os # Used for bringing window to the centre of the screen.
 # Importing other programs created in Scripts/Globals, so specific functions can be used.
 from Scripts.Buttons import * 
 from Scripts.GUI import *
-from Scripts.Keyboard_Input import KeyInput_Handler
+from Scripts.KeyInput import KeyInput_Handler
 from Scripts.Kim_Sprites import *
 from Scripts.Buttons import *
 from Scripts.GameObject_Sprites import *
@@ -22,6 +32,12 @@ font_130pt = pygame.font.SysFont("Neucha", 130)
 font_30pt = pygame.font.SysFont("Neucha", 30)
 font_15pt = pygame.font.SysFont("Neucha", 15)
 font_25pt = pygame.font.SysFont("Neucha", 15)
+
+# Defining the RGB values of the colours needed.
+Fog = (20, 20, 20)
+White = (255, 255, 255)
+Green = (0, 128, 0)
+Black = (0, 0, 0)
 
 # Initializing Pygame to use all its functionalities.
 pygame.init()
@@ -38,7 +54,11 @@ coinSound.set_volume(1.0)
 # Initalizing the window width and height, which will be the size of the screen.
 WIN_WIDTH = 960
 WIN_HEIGHT = 540
- 
+
+# Setting variables for half the window width and height (for complex_camera function).
+HALF_WIDTH = WIN_WIDTH / float(2)
+HALF_HEIGHT = WIN_HEIGHT / float(2)
+
 # Initializing some variables used to display screen.
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32 # The number of bits that will be used for colour in game.
@@ -59,7 +79,7 @@ def Restart():
 
 # Restart button is made in the Main program (not Buttons.py) because it uses the Restart function here.
 btnRestart = Menu.Button(text="RESTART", rect=(0, 0, 160, 60),
-                         bg=UltraColor.Fog, fg=UltraColor.White, bgr=UltraColor.Green, tag=("GameOver", None))
+                         bg=Fog, fg=White, bgr=Green, tag=("GameOver", None))
 btnRestart.Left = WIN_WIDTH - 442
 btnRestart.Top = WIN_HEIGHT - 320
 btnRestart.Command = Restart
@@ -87,8 +107,8 @@ def main():
 
     # Checking for the current level and adding coins to coingroup, displaying player to screen.
     if Globals.current_level==1:
-        player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
-        #player = Kim(32*16, 32*4)
+        #player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
+        player = Kim(32*16, 32*4)
         # Adding coins to coin group by creating instances of the coin class to different places on screen.
         coingroup.add(Coin(32*9, 32*14))
         coingroup.add(Coin(32*16, 32*13))
@@ -108,12 +128,12 @@ def main():
             "L                          E L",
             "L                            L",
             "L                   R        L",
-            "L    PPCAAAADPPCAADPPPCAAADPPL",
+            "L    PPCAAAADPPCAADPPPPCAADPPL",
             "L                            L",
             "L                            L",
             "L                            L",
             "L                            L",
-            "L           R          R     L",
+            "L           R                L",
             "LPPPCAAAADPPPPPPCAAAADPPPP   L",
             "L                            L",
             "L                            L",
@@ -219,7 +239,7 @@ def main():
             # Quit the game if the user closes the window.
             if e.type == QUIT:
                 Globals.isRunning = False
-            KeyInput_Handler(e) # Calling the KeyInput_Handler function from the Keyboard_Input program to identify the event and update Globals variables accordingly.
+            KeyInput_Handler(e) # Calling the KeyInput_Handler function from the KeyInput program to identify the event and update Globals variables accordingly.
             # If the mouse button is pressed, carry out the command. 
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button == 1: # The mouse button is pressed, so set this to True (1).
@@ -232,11 +252,9 @@ def main():
 
         # Displaying different pictures, buttons, etc. to the screen depending on the scene.
         if Globals.scene == "Menu":
-            #Globals.menu_counter += 1
             # Displaying the background image of the Menu scene.
             BackgroundImage = pygame.image.load("Graphics/MenuPic.jpg") 
             screen.blit(BackgroundImage, (0, 0))
-            pygame.display.flip() 
             
             # Creating the Play button with the Menu tag from Buttons.py.
             for btn in Menu.Button.All: # Checking all the buttons from the GUI program.
@@ -248,7 +266,6 @@ def main():
             # Displaying the background image of the Menu scene.
             InstructionsImg = pygame.image.load("Graphics/InstructionsImg.jpg") 
             screen.blit(InstructionsImg,(0,0))
-            pygame.display.flip() 
            
             # Creating the Play button with the Instructions tag from Buttons.py.
             for btn in Menu.Button.All:
@@ -258,16 +275,16 @@ def main():
 
         elif Globals.scene == "GameOver":
             pygame.mixer.music.pause() # Pausing the music.
+
             # If Kim's health is greater than 0, meaning the game is over because she cleared the last level, define congratulatory messages.
-       
             if Globals.player_health > 0: 
-                End_Message=font_130pt.render("Fantastic!", 1, UltraColor.Black)
-                End_Bottom_Message=font_30pt.render("       You Won!", 1, UltraColor.Black)
+                End_Message=font_130pt.render("Fantastic!", 1, Black)
+                End_Bottom_Message=font_30pt.render("       You Won!", 1, Black)
+            
             # Otherwise, it means the game is over because she hit an obstacle, so define appropriate end messages.
-          
             else:
-                End_Message=font_130pt.render("Nice Try!", 1, UltraColor.Black)
-                End_Bottom_Message=font_30pt.render("You Reached Level "+str(Globals.current_level), 1, UltraColor.Black)
+                End_Message=font_130pt.render("Nice Try!", 1, Black)
+                End_Bottom_Message=font_30pt.render("You Reached Level "+str(Globals.current_level), 1, Black)
           
             # Display the image for the game over screen (same as menu).
             GameOverImg = pygame.image.load("Graphics/MenuPic.jpg") 
@@ -306,8 +323,7 @@ def main():
                 e.update(platforms,entities)
 
             # Updating the player, her location, movement, and the platforms on the screen.
-            player.update(Globals.up, Globals.down, Globals.left,
-                        Globals.right, Globals.isRunning, platforms)
+            player.update(Globals.up, Globals.down, Globals.left, Globals.right, Globals.isRunning, platforms)
 
             # Displaying the player and other game objects from the entities group.
             for e in entities:
@@ -317,37 +333,37 @@ def main():
             num_coins = "x " + str(Globals.coins)
             if Globals.coins==1:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==2:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==3:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==4:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==5:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==6:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==7:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==8:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (523, 0.5))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
+                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (Fog)), (523, 0.5))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==9:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
-                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (520, 0.5))
+                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (Fog)), (520, 0.5))
             elif Globals.coins==10:
                 screen.blit(GameObject_Sprites.coin,(9,10))
-                screen.blit(font_25pt.render(num_coins, True, (UltraColor.Fog)), (30, 8))
-                screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (UltraColor.Fog)), (520, 0.5))
+                screen.blit(font_25pt.render(num_coins, True, (Fog)), (30, 8))
+                screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (Fog)), (520, 0.5))
             
             # End the game if the player's health is ever lower than or equal to 0.
             if Globals.player_health <= 0:
@@ -358,22 +374,28 @@ def main():
             pygame.display.update()            
 
 """
-The following Camera Class and Complex Camera function were borrowed from Anthony Biron (https://www.youtube.com/watch?v=FpufbRZxKRM).
-This complex camera function follows my player until he hits the edge of the map
+The following camera functionalities were borrowed from Martian Marty (codergopher YouTube channel).
+Camera class: https://youtu.be/AO_mUnSIMoU
+Complex camera function: https://youtu.be/-5KEhsEdFus
+They allow me to navigate the entities on my screen.
 """
 
 # This class helps me track the location and movement of the entities in my game (like coins, player, etc.).
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
-        self.state = Rect(0, 0, width, height)
+        self.state = Rect(0, 0, width, height) # Defining field of vison from top left corner.
 
     def apply(self, target):
-        return target.rect.move(self.state.topleft)
+        return target.rect.move(self.state.topleft) # Detects if the entity is in motion.
 
     def update(self, target):
-        self.state = self.camera_func(self.state, target.rect)
+        self.state = self.camera_func(self.state, target.rect) # Will update when it sees the movement of the entity.
 
+def complex_camera(camera, target_rect):
+    x, y, w, h = target_rect
+    return Rect(HALF_WIDTH - x, HALF_HEIGHT - y, w, h)
+"""
 # The complex camera tracks entities from a fixed point of view.
 def complex_camera(camera, target_rect):
     l, t, _, _ = target_rect
@@ -385,214 +407,220 @@ def complex_camera(camera, target_rect):
     t = max(-(camera.height - WIN_HEIGHT), t) 
     t = min(0, t) 
     return Rect(l, t, w, h)
+"""
 
+# Base class I will use for all my entities, which has properties of a Pygame sprite base class for all visible game objects.
 class Entity(pygame.sprite.Sprite):
+    # Will initialize all my entities as Pygame sprites, so I can manipulate them with Pygame functionalities.
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self) 
 
+# Main character class that handles her movement, location, collisions, etc.
 class Kim(Entity):
+    # Sets up the initial location, movement, and properties of the player.
     def __init__(self, x, y):
-        Entity.__init__(self)
+        Entity.__init__(self) # Makes game object functionalities from Pygame available to player.
+
+        # Sets the initial speed the player is moving up/down or left/right.
         self.xvel = 0
         self.yvel = 0
-        self.health=Globals.player_health
+        self.health = Globals.player_health # Sets player's health to 100.
 
+        # Defines location of the player based on what's passed to the class instantiation (x and y).
         self.x = x
         self.y = y
 
+        # Defines attributes to be used in detecting collisions and sprite animations.        
         self.faceright = True
         self.destroyed = False
         self.counter_stand = 0
         self.counter_run = 0
         self.counter_jump = 0
         self.onGround = False
-
         self.moving = False
         self.airborne = False
-        self.destroyed = False
+        self.level_transition = False 
 
-        self.fade = True
-
+        # Setting initial image as first standing sprite and surface rect at the same location as the player, with a specific size.
         self.image = Kim_Sprites.stand1
-        self.rect = Rect(x,y,21*1.5, 52*1.5)
+        self.rect = Rect(x, y, 21*1.5, 52*1.5)
 
+    # Updates Kim as she moves across the screen.
     def update(self, up, down, left, right, running, platforms):
 
+        # Only updates if Kim is not destroyed.
         if not self.destroyed:
-            """
-            if Globals.timer<=0:
-                Globals.timer=0
-            """
-            
+            # The following will occur by checking Global variables that will be passed to this function, manipulated by the KeyInput program.
+
+            # Move Kim up at a constant y-velocity if the user presses the up arrow key and Kim is on the ground.   
             if up:
-                #print('up')
                 if self.onGround:
                     self.yvel -= 16
-
+            # Do nothing if the user presses the down arrow key.   
             if down:
                 pass
-
+            # Move Kim to the left at a set x-velocity (negative because it's left) if the user presses the left arrow key.   
             if left:
-                self.xvel = -11               
-                self.faceright = False
-
+                self.xvel = -10   
+                self.faceright = False # Kim should face left.
+            # Move Kim to the right at a set x-velocity if the user presses the right arrow key.   
             if right:
-                self.xvel = 11
-                self.faceright = True
-                
+                self.xvel = 10
+                self.faceright = True # Kim should face right. 
+            # Move Kim down at a constant y-velocity if she is airborne.   
             if not self.onGround:
-                self.yvel += 0.6
-                # Maximum falling speed.
+                self.yvel += 0.6 # Initial falling speed.
+                # Defining the maximum falling speed.
                 if self.yvel > 100:
                     self.yvel = 100
-
+            # If the user hasn't pressed the let or right arrow key, Kim should not move horizontally.
             if not (left or right):
                 self.xvel = 0
 
-            # increment in x direction
+            # Increment Kim's horizontal position as she moves.    
             self.rect.left += self.xvel
-            
-            # do x-axis collisions
+            # Perform Kim's x-axis collisions.    
             self.collide(self.xvel, 0, platforms, up, down, left, right)
-            
-            # increment in y direction
+
+            # Increment Kim's vertical position as she moves.    
             self.rect.top += self.yvel
-            # assuming we're in the air
+            # Kim is in the air since she has jumped.    
             self.onGround = False
-            
-            if self.health<=0:
-                self.destroyed=True
+
+            # Update Kim's health.
+            if self.health <= 0:
+                self.destroyed = True
     
-            # do y-axis collisions
+            # Perform Kim's y-axis collisions.    
             self.collide(0, self.yvel, platforms, up, down, left, right)
             
-            if self.fade==False:
+            # Change the level if Kim touches a door (part of the platforms list).
+            if self.level_transition == True:
                 for p in platforms:
                     if p.tile=="E":
                         p.change_level()
 
-            #self.updatecharacter(Kim_Sprites.run1)
-
+            # If Kim's y-axis movement has a falling or jumping velocity, she is in the air.
             if self.yvel < 0 or self.yvel > 9:
                 self.airborne = True
+            # Otherwise, she is not.
             else:
-                self.airborne=False
-        #print( self.yvel)
+                self.airborne = False
+        
+        # Animating Kim's sprites based on all the above variable updates.
         self.animate()
 
+    # Collides Kim with platforms in the platforms list.
     def collide(self, xvel, yvel, platforms, up, down, left, right):
 
+        # For each game object in the platforms list, depending on what Kim collided with, perform certain actions.
         for p in platforms:
+            # Detecting the collision between Kim and the platform.
             if pygame.sprite.collide_rect(self, p):
 
-                if p.tile=="E":
+                # If Kim the tile Kim collided with is a door, change the kevel.
+                if p.tile == "E":
                     p.change_level()
-                    self.fade=False
-                    self.destroyed=True
-                    self.rect.midbottom=p.rect.midbottom           
+                    self.level_transition = True
+                    self.destroyed = True # Kim will be 
+                    self.rect.midbottom=p.rect.midbottom # Collide in the centre of the door.
 
+                # Otherwise, perform certain actions based on what Kim collided with.
                 else:
-                    if xvel==0 and yvel==0 and self.faceright:
-                        self.rect.right=p.rect.left
-
-                    if xvel > 0:                        
+                    # If Kim is not moving and facing right, collide her right side with the platform's left side.
+                    if xvel == 0 and yvel == 0 and self.faceright:
                         self.rect.right = p.rect.left
+
+                    # If Kim is moving right...
+                    if xvel > 0:                        
+                        self.rect.right = p.rect.left # Collide Kim's right side with the platform's left side.
+                        # If Kim collided with an acid or rock tile, update hear health and destroyed variables, and call the dead function.
                         if p.tile=="A" or p.tile=="R":
                             self.health=0
                             Globals.player_health = self.health
                             self.destroyed=True
                             self.dead()
 
+                    # If Kim is moving left...
                     if xvel < 0:
-                        self.rect.left = p.rect.right
+                        self.rect.left = p.rect.right # Collide Kim's left side with the platform's right side.
+                        # If Kim collided with an acid or rock tile, update her health and destroyed variables, and call the dead function.                       
                         if p.tile=="A" or p.tile=="R":
-                            self.health=0
+                            self.health = 0
                             Globals.player_health = self.health
-                            self.destroyed=True
+                            self.destroyed = True
                             self.dead()
 
+                    # If Kim is moving down...
                     if yvel > 0:
+                        # If Kim collided with an acid or rock tile, update her health and destroyed variables, and call the dead function.
                         if p.tile=="A" or p.tile=="R":
-                            self.health=0
+                            self.health = 0
                             Globals.player_health = self.health
-                            self.destroyed=True
+                            self.destroyed = True
                             self.dead()
                         
-                        self.rect.bottom = p.rect.top
+                        self.rect.bottom = p.rect.top # Collide Kim's rect's bottom with the platform's rect's top.
+
+                        # Update Kim's movement variables.
                         self.onGround = True
                         self.counter_jump = 0
                         self.airborne = False
                         self.yvel = 0
 
+                    # If Kim is moving up, collide her rect's top with the platform's rect's bottom.
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
                         
-                        #touching top
+                        # If Kim is touching the bottom of a platform, make her fall back down at a constant y-velocity.
                         if (self.rect.top <= p.rect.bottom):
-                            #print("touching")
-                            self.yvel+=1.3
-                
-                """
-                if p.tile=="E":
-                    if Globals.current_level == 3:
-                        Globals.scene = "GameOver"
-                    else:
-                        Globals.current_level += 1
-                """
+                            self.yvel += 1.3
 
-            """
-    def collide(self, xvel, yvel, platforms):
-        #Collide Platforms
-        for p in platforms:
-            if pygame.sprite.collide_rect(self, p):
-                if xvel > 0:
-                    self.rect.right = p.rect.left
-                    self.xvel = -2
-                if xvel < 0:
-                    self.rect.left = p.rect.right
-                    self.xvel = 2
-                if yvel > 0:
-                    self.rect.bottom = p.rect.top
-                    self.onGround = True
-                    self.yvel = 0
-                if yvel < 0:
-                    self.rect.top = p.rect.bottom
-                """
+    # Animates Kim as she moves, by calling her sprite animation loops based on her motion.
+    def animate(self):  
 
-    def animate(self):
         if not self.destroyed:
+            # If Kim's x-axis movement has a moving left or right velocity, she should jump or run.
             if self.xvel > 0 or self.xvel < 0:
-                self.counter_stand=0
-                #self.updatecharacter(Kim_Sprites.stand1)
+                self.counter_stand = 0
+
+                # If Kim is in the air, initiate jump animation.
                 if self.airborne:
-                    #self.move = True
                     self.jumploop()
-                    self.counter_run = 0
+
+                # Otherwise, initiate run animation.
                 else:
                     self.runloop()
+
+            # If Kim is not in horizontal motion, she should jump or stand.
             else:
+                # If Kim is in the air, initiate jump animation.
                 if self.airborne:
                     self.jumploop()
-                    self.counter_run = 0
+
+                # Otherwise, initiate stand animation.
                 else:
-                    #print ("stand")
                     self.standloop()
     
+    # If Kim has been destroyed, pause the music, display the GameOver screen, and update her health.
     def dead(self):
         pygame.mixer.music.pause()
-        Globals.scene="GameOver"
+        Globals.scene = "GameOver"
         Globals.player_health = 0
 
+    # Updating Kim's image with her animated surface.
     def updatecharacter(self, ansurf):
         if not self.faceright:
-            ansurf = pygame.transform.flip(ansurf, True, False)
+            ansurf = pygame.transform.flip(ansurf, True, False) # Making Kim's animation face left by flipping surface horizontally.
         self.image = ansurf
-    
+
+
+    # Checks and increments counter_stand's value to loop through Kim's standing sprites.
     def standloop(self):
-        #print ("entered stand loop")
+        # The following uses the code written to a text file by SpriteMapping.py. The numbers between each check for counter_stand controls the speed of the animation.
         if self.counter_stand==1:
-            self.updatecharacter(Kim_Sprites.stand1)
-            self.rect.size=(21*1.5, 52*1.5)
+            self.updatecharacter(Kim_Sprites.stand1) # Updates the animated surface.
+            self.rect.size=(21*1.5, 52*1.5) # Defines the rect size of the surface.
         elif self.counter_stand==4:
             self.updatecharacter(Kim_Sprites.stand2)
             self.rect.size=(22*1.5, 52*1.5)
@@ -635,20 +663,15 @@ class Kim(Entity):
         elif self.counter_stand==43:
             self.updatecharacter(Kim_Sprites.stand15)
             self.rect.size=(20*1.5,52*1.5)
-            """elif self.counter_stand==75:
-            
-            self.updatecharacter(Kim_Sprites.stand16)
-            self.rect.size=(int(20*2),int(52/3))
-            """
-            #print("last stand")
-            self.counter_stand = 0
-        self.counter_stand += 1
-        #print(self.counter_stand)
+            self.counter_stand = 0 # Set counter_stand to 0 to re-loop through the animation.
+        self.counter_stand += 1 # Increment counter_stand each time a sprite is displayed, to display the next sprite in the animation.
 
+    # Checks and increments counter_run's value to loop through Kim's running sprites.
     def runloop(self):
+        # The following uses the code written to a text file by SpriteMapping.py. The numbers between each check for counter_stand controls the speed of the animation.
         if self.counter_run==1:
-            self.updatecharacter(Kim_Sprites.run1)
-            self.rect.size=(36*1.5, 52*1.5)
+            self.updatecharacter(Kim_Sprites.run1) # Updates the animated surface.
+            self.rect.size=(36*1.5, 52*1.5) # Defines the rect size of the surface.
         elif self.counter_run==2:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 52*1.5)
@@ -677,15 +700,17 @@ class Kim(Entity):
             self.updatecharacter(Kim_Sprites.run9)
             self.rect.size=(52*1.5, 52*1.5)
         elif self.counter_run==11:
-            self.counter_run = 0
-        self.counter_run+=1
+            self.counter_run = 0 # Set counter_run to 0 to re-loop through the animation.
+        self.counter_run += 1 # Increment counter_run each time a sprite is displayed, to display the next sprite in the animation.
 
     def jumploop(self):
         #self.counter_jump += 1
+        # If Kim's moving up, display the jumping sprite. 
         if self.yvel < 0:
             #print("I entered")
-            self.updatecharacter(Kim_Sprites.jump11)
-            self.rect.size=(int(33*1.5),int(52*1.5))
+            self.updatecharacter(Kim_Sprites.jump11) # Updates the animated surface.
+            self.rect.size=(int(33*1.5),int(52*1.5)) # Defines the rect size of the surface.
+        # If Kim's moving down, display the landing sprite. 
         elif self.yvel >= 0:
             #print("Im working")
             self.updatecharacter(Kim_Sprites.jump10)
@@ -693,80 +718,97 @@ class Kim(Entity):
 
 class Coin(Entity):
     def __init__(self, x, y):
-        Entity.__init__(self)
-        self.destroyed = False
+        Entity.__init__(self) # Makes game object functionalities from Pygame available to coin.
+
+        # Defines attributes to be used in detecting collisions and sprite animations.        
+        self.destroyed = False 
         self.counter_dead = 0
+
+        # Defines location of the coin based on what's passed to the class instantiation (x and y).
         self.x = x
         self.y = y
-        self.image = GameObject_Sprites.coin
-        self.rect = Rect(x, y, 16, 16)
 
+        self.image = GameObject_Sprites.coin # Sets the coin's image to the coin sprite from GameObject_Sprites.py.
+        self.rect = Rect(x, y, 16, 16) # Setting the desired size of the coin's surface rect.
+
+    # Collide the coin with platforms and entities, and animate it ()
     def update(self, platforms, entities):
         self.collide(platforms, entities)
         self.animate()
         
     def collide(self, platforms, entities):
+        # Check collision of the player with the coin occured, and if so, update the destroyed variable and remove the coin from the coingroup.
         for player in entities:
             if pygame.sprite.collide_rect(self, player):
                 self.destroyed = True
                 coingroup.remove(self)
 
     def animate(self):
+        # Play the coin sound effect, increment the player's coins collected, and kill the coin/
         if self.destroyed:
             coinSound.play()
-            self.destroyloop()
-
-    def destroyloop(self):
-        Globals.coins+=1
-        self.kill()
+            Globals.coins += 1
+            self.kill()
 
 #Platform Class that handles blitting specific tiles depending on the type of letter in the levels list
 class Platform(Entity):
     def __init__(self, x, y, tile):
-        Entity.__init__(self)
-        self.counter_change = 0
-        self.tile = tile
+        Entity.__init__(self) # Makes game object functionalities from Pygame available to platform.
+        self.counter_change = 1 # Used to change the level upon door collision.
+        self.tile = tile # Defining platform tile.
         
+        # Load the platform game object depending on the letter entered in the level.
         if self.tile=="E":
             self.image = pygame.image.load("Graphics/DoorClosed.png")
         elif self.tile=="R":
             self.image = pygame.image.load("Graphics/Rock.png")
         elif self.tile=="P":
-            self.image = pygame.image.load("Graphics/Tile2.png").convert()
+            self.image = pygame.image.load("Graphics/Tile2.png")
         elif self.tile=="C":
-            self.image = pygame.image.load("Graphics/Tile1.png").convert()
+            self.image = pygame.image.load("Graphics/Tile1.png")
         elif self.tile=="A":
             self.image = pygame.image.load("Graphics/Lava.png")
         elif self.tile=="D":
-            self.image = pygame.image.load("Graphics/Tile3.png").convert()
+            self.image = pygame.image.load("Graphics/Tile3.png")
         elif self.tile=="L":
-            self.image = pygame.image.load("Graphics/Tile4.png").convert()
+            self.image = pygame.image.load("Graphics/Tile4.png")
 
+        # Scale the door's to a custom size, otherwise the standard 32 by 32 regardless of the tile.
         if self.tile=="E":
             self.image = pygame.transform.scale(self.image, (58,96))
         else:
             self.image = pygame.transform.scale(self.image, (32,32))
         
+        # Set the door's surface rect to a custom size, otherwise the standard 32 by 32 regardless of the tile.
         if self.tile=="E":
             self.rect = Rect(x, y, 58, 96)
-        
         else:
-            self.rect = Rect(x, y, 32, 32)  # change according to pic width
+            self.rect = Rect(x, y, 32, 32)  
             
-    #Changing Door sprite when player collects 3 keys
+    # Changing the level when Kim collides with the door.
     def change_level(self):
-        if self.counter_change==1:
-            self.image = GameObject_Sprites.Door_Open
-        elif self.counter_change==2:
+
+        #self.counter_change = 1
+        # First, change the door sprite so it's open.
+        if self.counter_change == 1:
+            self.image = GameObject_Sprites.DoorOpen # Sets new image for door, using the open door sprite from GameObject_Sprites.py.
+        
+        # Then, change the level/scene.
+        elif self.counter_change == 2:
+            # If Kim collided with the door on level three, player won the game, so go to GameOver screen.
             if Globals.current_level == 3:
                 Globals.scene = "GameOver"
+            # Otherwise, increment the level and call the main function again.
             else:
-                Globals.current_level+=1
-                main()     
-        self.counter_change+=1
-    
+                Globals.current_level += 1
+                main()
+                
+        self.counter_change += 1 # Incrementing counter_change so the door sprite changes and the level/scene changes.
+ 
+"""
     def update(self):
         pass
+"""
 
-main()
-pygame.quit()
+main() # Calling the main function to initiate gameplay.
+pygame.quit() # Quit the game once the main function execution is complete.

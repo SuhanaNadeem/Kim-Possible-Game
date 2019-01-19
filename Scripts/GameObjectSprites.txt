@@ -1,8 +1,0 @@
-"""
-This is the raw code 
-
-character = pygame.Surface((126,125),pygame.SRCALPHA)
-.blit(spritesheet,(-70,-62))
-character = pygame.transform.scale(character, (int(126/3),int(125/3)))
-coin = character
-character

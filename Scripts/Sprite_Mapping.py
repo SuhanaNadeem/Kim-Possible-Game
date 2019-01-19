@@ -1,35 +1,41 @@
 """
-Instead of having to crop each of my sprites from the spritesheet, I'm using this Sprite Mapping functionality 
-which allows me to save each sprite as its own surface and name it different variable names. THis is not used in the
-actual gameplay; just makes it easier for me.
+Instead of having to crop each of my sprites from the spritesheet, I'm using this Sprite Mapping 
+functionality. This is not used in the actual gameplay; just makes it easier for me to locate and size the 
+sprites for Kim, from my spritesheet.
+
 This code has been borrowed from: Sufiyaan Nadeem (https://github.com/SufiyaanNadeem/Ben-10-Game/blob/master/Scripts/Sprite_Mapping.py),
 as adapted by Anthony Biron (https://www.youtube.com/watch?v=cSsurU0yFEw). 
-Edited by: Suhana Nadeem.
-I have edited Sufiyaan's code (and commented it) so I can now 
+
+As I mapped each of my sprites, this program wrote to two text files: KimPossibleSprite.txt and Kim_Animates.txt.
+In KimPossibleSprite.txt, this program wrote what I used to locate and size the sprites in Kim_Sprites.py. 
+In Kim_Animates.txt, this program wrote what I used in my animation loops in Game.py (runloop, etc.).
+
+I edited what this program wrote to both the text files to customize it for my game. See Kim_Sprites.py 
+and Game.py for my edits, and the two original text files (mentioned above) for more details.
+
+Modified and commented by: Suhana Nadeem. 
 """
-# Imports
+
+# Importing modules/functions needed. 
 import pygame
 from pygame import *
 import sys
 
-# Screen Dimensions
-
+# Setting the window dimensions.
 WIN_WIDTH = 768
 WIN_HEIGHT = 672
 
-# Screen Defaults
-
+# Setting the screen defaults.
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
 
-# Spritesheet
+# Loading the spritesheeet from the Graphics folder.
+spritesheet = pygame.image.load("Graphics/KimSprites.png")
 
-spritesheet = pygame.image.load("CoinSpriteSheet.png")
-
-# Main Function
-
+# Main function that carries out sprite mapping process.
 def main():
+    # Initializing variables and pygame, customizing window.
     isRunning = True
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
@@ -39,13 +45,29 @@ def main():
     pygame.key.set_repeat(1, 30)
     counter = 0
     first = True
+
+    # Handling KeyBoard inputs to "crop" each sprite.
     while isRunning:
         print(str(h))
         for e in pygame.event.get():
+
             if e.type == QUIT:
                 isRunning = False
             if e.type == KEYDOWN and e.key == K_ESCAPE:
                 isRunning = False
+
+            """
+
+            The commands I kept in the program (the ones I used):
+            'up' for moving the sprite map up,
+            'down' for moving the sprite map down, 
+            'z' for decreasing the height of the sprite map, 
+            'x' for increasing the height of the sprite map,
+            'c' for decreasing the width of the sprite map, and
+            'v' for increasing the width of the sprite map.
+            
+            """
+
             if e.type == KEYDOWN and e.key == K_UP:
                 y = y - 1
             if e.type == KEYDOWN and e.key == K_DOWN:
@@ -54,15 +76,6 @@ def main():
                 x = x - 1
             if e.type == KEYDOWN and e.key == K_RIGHT:
                 x = x + 1
-
-            if e.type == KEYDOWN and e.key == K_i:
-                y = y - 5
-            if e.type == KEYDOWN and e.key == K_k:
-                y = y + 5
-            if e.type == KEYDOWN and e.key == K_j:
-                x = x - 5
-            if e.type == KEYDOWN and e.key == K_l:
-                x = x + 5
 
             if e.type == KEYDOWN and e.key == K_z:
                 h = h - 1
@@ -75,10 +88,12 @@ def main():
 
             if e.type == KEYDOWN and e.key == K_q:
                 counter = 0
+
+            # Pressing the spacebar initiates writing to both the text files.
             if e.type == KEYDOWN and e.key == K_SPACE:
                 name = input("Name of Sprite?")
 
-                f = open("GameObjectSprites.txt", "a")
+                f = open("KimPossibleSprite.txt", "a") # Sprite details code - KimPossibleSprite.txt.
 
                 savedcode = "character = pygame.Surface((" + str(w) + \
                     "," + str(h) + "),pygame.SRCALPHA)" + "\n"
@@ -96,7 +111,7 @@ def main():
                 f.write(savedcode)
                 f.close()
 
-                f = open("GameObject_Animates.txt", "a")
+                f = open("Kim_Animates.txt", "a") # Animation code - Kim_Animates.txt.
 
                 if counter == 0:
                     if not first:
@@ -143,6 +158,7 @@ def main():
                 f.close()
                 counter += 1
 
+        # Customize the screen.
         screen.fill(Color("#000000"))
 
         character = Surface((w, h))
@@ -154,6 +170,6 @@ def main():
 
         pygame.display.update()
 
-
+# Run the program.
 selected_character = input("Which character?")
 main()
