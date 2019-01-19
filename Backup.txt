@@ -790,7 +790,7 @@ class Platform(Entity):
         
         if self.tile=="E":
 
-            self.image = pygame.image.load("Graphics/DoorLocked.png")
+            self.image = pygame.image.load("Graphics/DoorClosed.png")
         elif self.tile=="P":
             self.image = pygame.image.load("Graphics/Tile (2).png").convert()
         elif self.tile=="C":

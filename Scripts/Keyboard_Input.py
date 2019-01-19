@@ -1,14 +1,16 @@
 """
-Key Input Handler that decides what variables to set true depending on what keys are pressed.
-
+This file has a basic function that handles the user's keyboard inputs. It changes the values of 
+some of my Globals variables depending on the key the user presses.
 """
 
 import pygame
+# Importing everything from pygame.
 from Globals import *
 
-
+# This is the function that is used in the Game program to respond to game events.
 def KeyInput_Handler(event):
     if event.type == pygame.KEYDOWN:
+        # If a key is pressed...
         if event.key == pygame.K_ESCAPE:
             Globals.isRunning = False
         if event.key == pygame.K_UP:
@@ -21,6 +23,7 @@ def KeyInput_Handler(event):
             Globals.right = True
 
     elif event.type == pygame.KEYUP:
+        # If a key is released...
         if event.key == pygame.K_UP:
             Globals.up = False
         if event.key == pygame.K_DOWN:

@@ -6,7 +6,7 @@ Author: Suhana Nadeem
 
 
 class Globals:
-    menu_counter = 0
+    #menu_counter = 0
     scene = "Menu"
     isRunning = True
     current_level = 1

@@ -1,10 +1,17 @@
 """
+My source for this program is:
 Meloonatic Melons
 GUI Framework
-By Harry Hitchen
+By: Harry Hitchen
 
-I am using this file in order to create Buttons and manipulate them easily. This file allows me to set text, hover-over features, functions, tags, etc.
-Coding this by my self would be time consuming and not very productive since this is a very small feature of the game.
+This source was referred to me by my brother, Sufiyaan Nadeem.
+
+This is a program I borrowed, which helps me make buttons, with text and tags (that I access from main),
+and allows the user to interact with them, with a hover-over functionality. 
+
+Given that this is a small part of my game's functionality and a multistep process complex, creating 
+this GUI framework myself would take too long and be unnecessary.
+
 """
 
 import pygame
@@ -12,7 +19,7 @@ from Scripts.UltraColor import *
 
 pygame.init()
 
-
+# This function locates the position of the mouse on the screen, and checks if the mouse touches the button rectangles.
 def MouseOver(rect):
     mouse_pos = pygame.mouse.get_pos()
     if mouse_pos[0] > rect[0] and mouse_pos[0] < rect[0] + rect[2] and mouse_pos[1] > rect[1] and mouse_pos[1] < rect[1] + rect[3]:
@@ -20,51 +27,46 @@ def MouseOver(rect):
     else:
         return False
 
-
+# This class defines the default font that I will be using.
 class Font:
-
     Default = pygame.font.SysFont("Neucha", 45)
-    Small = pygame.font.SysFont("Neucha", 15)
-    Medium = pygame.font.SysFont("Neucha", 40)
-    Large = pygame.font.SysFont("Neucha", 60)
-    Scanner = pygame.font.SysFont("Neucha", 30)
-
 
 class Menu:
 
     class Button:
 
+        # All the buttons will go in this list.
         All = []
 
-        def __init__(self, text, rect, bg, fg, bgr, font=Font.Default, tag=("menu", None)):
+        def __init__(self, text, rect, bg, fg, bgr, font=Font.Default, tag=("Menu", None)):
             self.Text = text
             self.Left = rect[0]
             self.Top = rect[1]
             self.Width = rect[2]
             self.Height = rect[3]
             self.Command = None
-            self.Rolling = False
+            self.Rolling = False # Keeps track of whether or not the user has engaged the method.
             self.Tag = tag
 
-            # NORMAL BUTTON
+            # Original button.
             self.Normal = pygame.Surface(
                 (self.Width, self.Height), pygame.HWSURFACE | pygame.SRCALPHA)
             self.Normal.fill(bg)
-            RText = font.render(text, True, fg)   # text, antialiasing, color
-            txt_rect = RText.get_rect()
-            self.Normal.blit(
-                RText, (self.Width / 2 - txt_rect[2] / 2, self.Height / 2 - txt_rect[3] / 2))
+            RText = font.render(text, True, fg) # Creating the text.
+            txt_rect = RText.get_rect() # Creating the rectangle. 
+            self.Normal.blit(RText, (self.Width / 2 - txt_rect[2] / 2, self.Height / 2 - txt_rect[3] / 2)) 
 
-            # HIGHLIGHTED BUTTON
+            # Hovered-over button.
             self.High = pygame.Surface(
                 (self.Width, self.Height), pygame.HWSURFACE | pygame.SRCALPHA)
             self.High.fill(bgr)
             self.High.blit(
                 RText, (self.Width / 2 - txt_rect[2] / 2, self.Height / 2 - txt_rect[3] / 2))
 
-            # SAVE BUTTON
+            # Saving the button.
             Menu.Button.All.append(self)
 
+        # Rendering the button to the screen, based on the dimensions provided.
         def Render(self, to, pos=(0, 0)):
             if MouseOver((self.Left + pos[0], self.Top + pos[1], self.Width, self.Height)):
                 to.blit(self.High, (self.Left + pos[0], self.Top + pos[1]))
@@ -75,8 +77,10 @@ class Menu:
 
     class Text:
 
+        # All the text will go in this list.
         All = []
 
+        # The text is created with set properties (colour, etc.), which I will use when creating the math.
         def __init__(self, text, font=Font.Default, color=UltraColor.Lime, bg=None):
             self.Text = text
             self.LastText = text
@@ -86,6 +90,7 @@ class Menu:
             self.Top = 0
             self.Bg = bg
 
+            # This process of creating a bitmap allows for dynamic text rendering, which means I can change the text on the same surface (button).
             bitmap = font.render(text, True, color)
             self.Bitmap = pygame.Surface(
                 bitmap.get_size(), pygame.SRCALPHA | pygame.HWSURFACE)
@@ -98,10 +103,10 @@ class Menu:
 
         def Render(self, to, pos=(0, 0)):
             if self.Text != self.LastText:
-                # TEXT HAS BEEN CHANGED
+                # If I change the text in my buttons...
                 self.LastText = self.Text
 
-                # RECREATE BITMAP (Dynamic Text Rendering)
+                # Recreating the Bitmap to render new text.
                 bitmap = self.Font.render(self.Text, True, self.UltraColor)
                 self.Bitmap = pygame.Surface(
                     bitmap.get_size(), pygame.SRCALPHA | pygame.HWSURFACE)
@@ -115,7 +120,7 @@ class Menu:
             to.blit(self.Bitmap, (self.Left + pos[0], self.Top + pos[1]))
 
     class Image:
-
+        # Defining the image of my buttons.
         def __init__(self, bitmap, pos=(0, 0)):
             self.Bitmap = bitmap
             self.Left = pos[0]
@@ -123,5 +128,6 @@ class Menu:
             self.Height = bitmap.get_height()
             self.Width = bitmap.get_width()
 
+        # Blitting the Bitmap image to the screen.
         def Render(self, to, pos=(0, 0)):
             to.blit(self.Bitmap, (self.Left + pos[0], self.Top + pos[1]))

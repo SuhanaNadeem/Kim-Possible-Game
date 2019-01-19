@@ -118,7 +118,7 @@ def main():
             "L                            L",
             "L                            L",
             "L                            L",
-            "L          R   R             L",
+            "L            R               L",
             "PPPPCAAADPPPPPPPPCAAADPPAAPPPP"]
 
     elif Globals.current_level == 2:
@@ -209,70 +209,83 @@ def main():
     entities.add(player) # Adding player to entities class.
     Globals.coins = 0 # Setting the coins the player has collected to 0.
     
+    # The following will occur as long as the game is running.
     while Globals.isRunning:
-        timer.tick(60)
+
+        timer.tick(60) # Setting the FPS to 60.
         
-        # Processing Keyboard and Button Inputs.
+        # Checking for user input through events.
         for e in pygame.event.get():
+            # Quit the game if the user closes the window.
             if e.type == QUIT:
                 Globals.isRunning = False
-            KeyInput_Handler(e)
-            
+            KeyInput_Handler(e) # Calling the KeyInput_Handler function from the Keyboard_Input program to identify the event and update Globals variables accordingly.
+            # If the mouse button is pressed, carry out the command. 
             if e.type == pygame.MOUSEBUTTONDOWN:
-                if e.button == 1: 
-                    for btn in Menu.Button.All:
+                if e.button == 1: # The mouse button is pressed, so set this to True (1).
+                    for btn in Menu.Button.All: # From all the buttons, if the button is pressed and its tag (in Buttons.py) is the Game scene, carry out the button command (if it exists).
                         if btn.Tag[0] == Globals.scene and btn.Rolling:
                             if btn.Command != None:
                                 btn.Command() 
                             btn.Rolling == False
                             break  
-        """
-        # Processing what happens if the user quits the game (the game stops running).
-        for e in pygame.event.get():
-            if e.type == QUIT:
-                isRunning = False
-        """
-        # Depending on the Current Globals.scene, Display different things
+
+        # Displaying different pictures, buttons, etc. to the screen depending on the scene.
         if Globals.scene == "Menu":
-            Globals.menu_counter += 1
+            #Globals.menu_counter += 1
+            # Displaying the background image of the Menu scene.
             BackgroundImage = pygame.image.load("Graphics/MenuPic.jpg") 
             screen.blit(BackgroundImage, (0, 0))
-            pygame.display.flip()  
-                    
-            for btn in Menu.Button.All:
-                if btn.Tag[0] == "Menu":
+            pygame.display.flip() 
+            
+            # Creating the Play button with the Menu tag from Buttons.py.
+            for btn in Menu.Button.All: # Checking all the buttons from the GUI program.
+                if btn.Tag[0] == "Menu": # If the item at the first index of the Tag attribute of the button (which describes the scene) is Menu, display that button.
                     btn.Render(screen)
-            pygame.display.update()            
+            pygame.display.update() 
 
         elif Globals.scene == "Instructions":
+            # Displaying the background image of the Menu scene.
             InstructionsImg = pygame.image.load("Graphics/InstructionsImg.jpg") 
             screen.blit(InstructionsImg,(0,0))
-            pygame.display.flip()
+            pygame.display.flip() 
+           
+            # Creating the Play button with the Instructions tag from Buttons.py.
             for btn in Menu.Button.All:
                 if btn.Tag[0] == "Instructions":
                     btn.Render(screen)
-            pygame.display.update()
+            pygame.display.update() 
 
         elif Globals.scene == "GameOver":
-            pygame.mixer.music.pause()
-            if Globals.player_health>0:
+            pygame.mixer.music.pause() # Pausing the music.
+            # If Kim's health is greater than 0, meaning the game is over because she cleared the last level, define congratulatory messages.
+       
+            if Globals.player_health > 0: 
                 End_Message=font_130pt.render("Fantastic!", 1, UltraColor.Black)
                 End_Bottom_Message=font_30pt.render("       You Won!", 1, UltraColor.Black)
+            # Otherwise, it means the game is over because she hit an obstacle, so define appropriate end messages.
+          
             else:
                 End_Message=font_130pt.render("Nice Try!", 1, UltraColor.Black)
                 End_Bottom_Message=font_30pt.render("You Reached Level "+str(Globals.current_level), 1, UltraColor.Black)
+          
+            # Display the image for the game over screen (same as menu).
             GameOverImg = pygame.image.load("Graphics/MenuPic.jpg") 
             screen.blit(GameOverImg,(0,0))
+          
+            # Creating the Exit button with the GameOver tag from Buttons.py.
             for btn in Menu.Button.All:
                 if btn.Tag[0] == "GameOver":
                     btn.Render(screen)
+          
+            # Displaying both components of the end message to the screen (regardless of which conditional block was entered above).
             screen.blit(End_Message, (485,285))
             screen.blit(End_Bottom_Message, (600,450))
-            pygame.display.update()
+            pygame.display.update() 
 
         elif Globals.scene == "Game":
 
-            # Changing the background depending on the Globals.scene.
+            # Displaying a different background image based on the current level.
             if Globals.current_level==1:
                 L1_Image = pygame.image.load("Graphics/Level1.png") 
                 screen.blit(L1_Image,(0,0))
@@ -285,24 +298,22 @@ def main():
                 L3_Image = pygame.image.load("Graphics/Level3.png") 
                 screen.blit(L3_Image,(0,0))
 
-            pygame.mixer.music.unpause()
+            pygame.mixer.music.unpause() # Playing the music, or continuing to play from where it stopped in GameOver.
             
-            #Blitting Sprites from different Groups
+            # Displaying coin sprites from the coingroup.
             for e in coingroup:
                 screen.blit(e.image,camera.apply(e))
                 e.update(platforms,entities)
-    
-            # update player, draw everything else
+
+            # Updating the player, her location, movement, and the platforms on the screen.
             player.update(Globals.up, Globals.down, Globals.left,
                         Globals.right, Globals.isRunning, platforms)
 
+            # Displaying the player and other game objects from the entities group.
             for e in entities:
                 screen.blit(e.image, camera.apply(e))
 
-            for btn in Menu.Button.All:
-                if btn.Tag[0] == "Game":
-                    btn.Render(screen)
-
+            # Checking how many coins the player has collected, displaying a small-scaled version of the coin and the number of coins to the top left of the screen.
             num_coins = "x " + str(Globals.coins)
             if Globals.coins==1:
                 screen.blit(GameObject_Sprites.coin,(9,9))
@@ -327,28 +338,31 @@ def main():
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
             elif Globals.coins==8:
                 screen.blit(GameObject_Sprites.coin,(9,9))
-                screen.blit(font_30pt.render("ONLY TWO COIN LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (523, 0.5))
+                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (523, 0.5))
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
             elif Globals.coins==9:
                 screen.blit(GameObject_Sprites.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (UltraColor.White)), (30, 8))
-                screen.blit(font_30pt.render("ONLY ONE COINS LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (520, 0.5))
+                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (UltraColor.Fog)), (520, 0.5))
             elif Globals.coins==10:
                 screen.blit(GameObject_Sprites.coin,(9,10))
                 screen.blit(font_25pt.render(num_coins, True, (UltraColor.Fog)), (30, 8))
                 screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (UltraColor.Fog)), (520, 0.5))
-            if Globals.player_health<=0:
+            
+            # End the game if the player's health is ever lower than or equal to 0.
+            if Globals.player_health <= 0:
                 Globals.scene = "GameOver"
 
-            pygame.display.flip()  
+            # Updating the screen.
+            pygame.display.flip() 
             pygame.display.update()            
 
 """
-Below is a Camera Class that targets the Player.  
-The Camera Class and Complex Camera function were borrowed from Anthony Biron(https://www.youtube.com/watch?v=FpufbRZxKRM).
+The following Camera Class and Complex Camera function were borrowed from Anthony Biron (https://www.youtube.com/watch?v=FpufbRZxKRM).
 This complex camera function follows my player until he hits the edge of the map
 """
 
+# This class helps me track the location and movement of the entities in my game (like coins, player, etc.).
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
@@ -359,17 +373,17 @@ class Camera(object):
 
     def update(self, target):
         self.state = self.camera_func(self.state, target.rect)
-#Complex Camera That follows the Player
+
+# The complex camera tracks entities from a fixed point of view.
 def complex_camera(camera, target_rect):
     l, t, _, _ = target_rect
     _, _, w, h = camera
     l, t, _, _ = -l + HALF_WIDTH, -t + HALF_HEIGHT, w, h
 
-    l = min(0, l)                           # stop scrolling at the left edge
-    # stop scrolling at the right edge
+    l = min(0, l) 
     l = max(-(camera.width - WIN_WIDTH), l)
-    t = max(-(camera.height - WIN_HEIGHT), t)  # stop scrolling at the bottom
-    t = min(0, t) # stop scrolling at the top
+    t = max(-(camera.height - WIN_HEIGHT), t) 
+    t = min(0, t) 
     return Rect(l, t, w, h)
 
 class Entity(pygame.sprite.Sprite):
@@ -419,16 +433,16 @@ class Kim(Entity):
                 pass
 
             if left:
-                self.xvel = -8               
+                self.xvel = -11               
                 self.faceright = False
 
             if right:
-                self.xvel = 8
+                self.xvel = 11
                 self.faceright = True
                 
             if not self.onGround:
                 self.yvel += 0.6
-                # max falling speed
+                # Maximum falling speed.
                 if self.yvel > 100:
                     self.yvel = 100
 
@@ -635,48 +649,47 @@ class Kim(Entity):
         if self.counter_run==1:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 52*1.5)
-        elif self.counter_run==3:
+        elif self.counter_run==2:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 52*1.5)
-        elif self.counter_run==5:
+        elif self.counter_run==3:
             self.updatecharacter(Kim_Sprites.run2)
             self.rect.size=(29*1.5, 52*1.5)
-        elif self.counter_run==7:
+        elif self.counter_run==4:
             self.updatecharacter(Kim_Sprites.run3)
             self.rect.size=(35*1.5, 52*1.5)
-        elif self.counter_run==9:
+        elif self.counter_run==5:
             self.updatecharacter(Kim_Sprites.run4)
             self.rect.size=(45*1.5, 52*1.5)
-        elif self.counter_run==11:
+        elif self.counter_run==6:
             self.updatecharacter(Kim_Sprites.run5)
             self.rect.size=(48*1.5, 52*1.5)
-        elif self.counter_run==13:
+        elif self.counter_run==7:
             self.updatecharacter(Kim_Sprites.run6)
             self.rect.size=(34*1.5, 52*1.5)
-        elif self.counter_run==15:
+        elif self.counter_run==8:
             self.updatecharacter(Kim_Sprites.run7)
             self.rect.size=(29*1.5, 52*1.5)
-        elif self.counter_run==17:
+        elif self.counter_run==9:
             self.updatecharacter(Kim_Sprites.run8)
             self.rect.size=(35*1.5, 52*1.5)
-        elif self.counter_run==19:
+        elif self.counter_run==10:
             self.updatecharacter(Kim_Sprites.run9)
             self.rect.size=(52*1.5, 52*1.5)
-        elif self.counter_run==21:
+        elif self.counter_run==11:
             self.counter_run = 0
         self.counter_run+=1
 
     def jumploop(self):
         #self.counter_jump += 1
-        if self.yvel<0:
+        if self.yvel < 0:
             #print("I entered")
             self.updatecharacter(Kim_Sprites.jump11)
             self.rect.size=(int(33*1.5),int(52*1.5))
-        elif self.yvel>=0:
+        elif self.yvel >= 0:
             #print("Im working")
             self.updatecharacter(Kim_Sprites.jump10)
             self.rect.size=(int(32*1.5),int(52*1.5))
-
 
 class Coin(Entity):
     def __init__(self, x, y):
@@ -715,7 +728,7 @@ class Platform(Entity):
         self.tile = tile
         
         if self.tile=="E":
-            self.image = pygame.image.load("Graphics/DoorLocked.png")
+            self.image = pygame.image.load("Graphics/DoorClosed.png")
         elif self.tile=="R":
             self.image = pygame.image.load("Graphics/Rock.png")
         elif self.tile=="P":
