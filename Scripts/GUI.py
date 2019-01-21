@@ -27,7 +27,7 @@ def MouseOver(rect):
 
 # This class defines the default font that I will be using.
 class Font:
-    Default = pygame.font.SysFont("Neucha", 45)
+    Default = pygame.font.SysFont("Default", 45)
 
 class Menu:
 

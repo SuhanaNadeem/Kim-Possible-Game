@@ -28,10 +28,9 @@ from Scripts.Coin_Sprite import *
 from Globals import *
 
 # Initializing all fonts needed.
-font_130pt = pygame.font.SysFont("Neucha", 130)
-font_30pt = pygame.font.SysFont("Neucha", 30)
-font_15pt = pygame.font.SysFont("Neucha", 15)
-font_25pt = pygame.font.SysFont("Neucha", 15)
+font_130pt = pygame.font.SysFont("Default", 130)
+font_30pt = pygame.font.SysFont("Default", 30)
+font_25pt = pygame.font.SysFont("Default", 25)
 
 # Defining the RGB values of the colours needed.
 Fog = (20, 20, 20)
@@ -107,7 +106,9 @@ def main():
 
     # Checking for the current level and adding coins to coingroup, displaying player to screen.
     if Globals.current_level==1:
+
         player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
+      
         # Adding coins to coin group by creating instances of the coin class to different places on screen.
         coingroup.add(Coin(32*9, 32*14))
         coingroup.add(Coin(32*16, 32*13))
@@ -119,7 +120,6 @@ def main():
         coingroup.add(Coin(32*13, 32*2))
         coingroup.add(Coin(32*16, 32*3))
         coingroup.add(Coin(32*2, 32*13))
-
         
         # Creating level list that will be iterated over.
         level = [
@@ -143,7 +143,9 @@ def main():
 
     elif Globals.current_level == 2:
         # Repeating steps taken with level 1, with coins at new places on the screen and new level layout.
-        player = Kim(32*2, 32*14)
+     
+        player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
+
         coingroup.add(Coin(32*9, 32*13))
         coingroup.add(Coin(32*19, 32*13))
         coingroup.add(Coin(32*27, 32*12))
@@ -177,8 +179,7 @@ def main():
     elif Globals.current_level == 3:
         # Repeating steps taken with level 1 and 2, with coins at new places on the screen and new level layout.
 
-        player = Kim(32*2, 32*14)
-        #player = Kim(32*7, 32*4)
+        player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
 
         coingroup.add(Coin(32*13, 32*13))
         coingroup.add(Coin(32*18, 32*15))
@@ -278,8 +279,8 @@ def main():
 
             # If Kim's health is greater than 0, meaning the game is over because she cleared the last level, define congratulatory messages.
             if Globals.player_health > 0: 
-                End_Message=font_130pt.render("Fantastic!", 1, Black)
-                End_Bottom_Message=font_30pt.render("       You Won!", 1, Black)
+                End_Message=font_130pt.render("Awesome!", 1, Black)
+                End_Bottom_Message=font_30pt.render("           You Won!", 1, Black)
             
             # Otherwise, it means the game is over because she hit an obstacle, so define appropriate end messages.
             else:
@@ -296,8 +297,8 @@ def main():
                     btn.Render(screen)
           
             # Displaying both components of the end message to the screen (regardless of which conditional block was entered above).
-            screen.blit(End_Message, (485,285))
-            screen.blit(End_Bottom_Message, (600,450))
+            screen.blit(End_Message, (510,325))
+            screen.blit(End_Bottom_Message, (590,450))
             pygame.display.update() 
 
         elif Globals.scene == "Game":
@@ -333,37 +334,37 @@ def main():
             num_coins = "x " + str(Globals.coins)
             if Globals.coins==1:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==2:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==3:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==4:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==5:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==6:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==7:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==8:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (Fog)), (523, 0.5))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (White)), (523, 6))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==9:
                 screen.blit(Coin_Sprite.coin,(9,9))
-                screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
-                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (Fog)), (520, 0.5))
+                screen.blit(font_25pt.render(num_coins, True, (White)), (30, 8))
+                screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (White)), (520, 6))
             elif Globals.coins==10:
                 screen.blit(Coin_Sprite.coin,(9,10))
                 screen.blit(font_25pt.render(num_coins, True, (Fog)), (30, 8))
-                screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (Fog)), (520, 0.5))
+                screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (White)), (520, 6))
             
             # End the game if the player's health is ever lower than or equal to 0.
             if Globals.player_health <= 0:
@@ -508,9 +509,10 @@ class Kim(Entity):
 
                 # If Kim the tile Kim collided with is a door, change the kevel.
                 if p.tile == "E":
+                    # Change the level.
                     p.change_level()
-                    self.level_transition = True
-                    self.destroyed = True # Kim will be 
+                    #self.level_transition = True 
+                    self.destroyed = True 
                     self.rect.midbottom = p.rect.midbottom # Collide in the centre of the door.
 
                 # Otherwise, perform certain actions based on what Kim collided with.
