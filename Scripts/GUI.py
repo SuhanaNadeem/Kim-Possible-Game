@@ -1,6 +1,5 @@
 """
-The following GUI Framework was borrwed from: Meloonatic Melons.
-By: Harry Hitchen
+The following GUI Framework was borrwed from: Meloonatic Melons, Harry Hitchen
 This source was referred to me by my brother, Sufiyaan Nadeem.
 
 This is a program helps me make buttons, with text and tags (that I access from my main program),

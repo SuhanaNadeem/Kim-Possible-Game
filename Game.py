@@ -24,7 +24,7 @@ from Scripts.GUI import *
 from Scripts.KeyInput import KeyInput_Handler
 from Scripts.Kim_Sprites import *
 from Scripts.Buttons import *
-from Scripts.GameObject_Sprites import *
+from Scripts.Coin_Sprite import *
 from Globals import *
 
 # Initializing all fonts needed.
@@ -108,7 +108,6 @@ def main():
     # Checking for the current level and adding coins to coingroup, displaying player to screen.
     if Globals.current_level==1:
         player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
-        #player = Kim(32*16, 32*4)
         # Adding coins to coin group by creating instances of the coin class to different places on screen.
         coingroup.add(Coin(32*9, 32*14))
         coingroup.add(Coin(32*16, 32*13))
@@ -128,7 +127,7 @@ def main():
             "L                            L",
             "L                          E L",
             "L                            L",
-            "L                   R        L",
+            "L                            L",
             "L    PPCAAAADPPCAADPPPPCAADPPL",
             "L                            L",
             "L                            L",
@@ -167,7 +166,7 @@ def main():
             "L                            L",
             "L                            L",
             "L                            L",
-            "L    R    R                  L",
+            "L    R                       L",
             "LPPPPCAADPPPCAAAADPPCAADPP   L",
             "L                            L",
             "L                            L",
@@ -209,7 +208,7 @@ def main():
             "L                            L",
             "L                            L",
             "L               R            L",
-            "PPPCAAADPPCAADPPPPCAADPPCADPPP"]
+            "PPPPCAADPPCAADPPPPPCADPPCADPPP"]
 
     # Building the level by checking where each tile is in the level list.
     for row in level: # The rows are the items in the list.
@@ -333,36 +332,36 @@ def main():
             # Checking how many coins the player has collected, displaying a small-scaled version of the coin and the number of coins to the top left of the screen.
             num_coins = "x " + str(Globals.coins)
             if Globals.coins==1:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==2:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==3:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==4:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==5:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==6:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==7:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==8:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_30pt.render("ONLY TWO COINS LEFT ON THIS LEVEL!", True, (Fog)), (523, 0.5))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
             elif Globals.coins==9:
-                screen.blit(GameObject_Sprites.coin,(9,9))
+                screen.blit(Coin_Sprite.coin,(9,9))
                 screen.blit(font_15pt.render(num_coins, True, (White)), (30, 8))
                 screen.blit(font_30pt.render("ONLY ONE COIN LEFT ON THIS LEVEL!", True, (Fog)), (520, 0.5))
             elif Globals.coins==10:
-                screen.blit(GameObject_Sprites.coin,(9,10))
+                screen.blit(Coin_Sprite.coin,(9,10))
                 screen.blit(font_25pt.render(num_coins, True, (Fog)), (30, 8))
                 screen.blit(font_30pt.render("ALL COINS ON THIS LEVEL COLLECTED!", True, (Fog)), (520, 0.5))
             
@@ -661,34 +660,34 @@ class Kim(Entity):
         if self.counter_run==1:
             self.updatecharacter(Kim_Sprites.run1) # Updates the animated surface.
             self.rect.size=(36*1.5, 49*1.5) # Defines the rect size of the surface.
-        elif self.counter_run==2:
+        elif self.counter_run==3:
             self.updatecharacter(Kim_Sprites.run1)
             self.rect.size=(36*1.5, 49*1.5)
-        elif self.counter_run==3:
+        elif self.counter_run==5:
             self.updatecharacter(Kim_Sprites.run2)
             self.rect.size=(29*1.5, 49*1.5)
-        elif self.counter_run==4:
+        elif self.counter_run==7:
             self.updatecharacter(Kim_Sprites.run3)
             self.rect.size=(35*1.5, 49*1.5)
-        elif self.counter_run==5:
+        elif self.counter_run==9:
             self.updatecharacter(Kim_Sprites.run4)
             self.rect.size=(45*1.5, 49*1.5)
-        elif self.counter_run==6:
+        elif self.counter_run==11:
             self.updatecharacter(Kim_Sprites.run5)
             self.rect.size=(48*1.5, 49*1.5)
-        elif self.counter_run==7:
+        elif self.counter_run==13:
             self.updatecharacter(Kim_Sprites.run6)
             self.rect.size=(34*1.5, 49*1.5)
-        elif self.counter_run==8:
+        elif self.counter_run==15:
             self.updatecharacter(Kim_Sprites.run7)
             self.rect.size=(29*1.5, 49*1.5)
-        elif self.counter_run==9:
+        elif self.counter_run==17:
             self.updatecharacter(Kim_Sprites.run8)
             self.rect.size=(35*1.5, 49*1.5)
-        elif self.counter_run==10:
+        elif self.counter_run==19:
             self.updatecharacter(Kim_Sprites.run9)
             self.rect.size=(52*1.5, 49*1.5)
-        elif self.counter_run==11:
+        elif self.counter_run==21:
             self.counter_run = 0 # Set counter_run to 0 to re-loop through the animation.
         self.counter_run += 1 # Increment counter_run each time a sprite is displayed, to display the next sprite in the animation.
 
@@ -717,7 +716,7 @@ class Coin(Entity):
         self.x = x
         self.y = y
 
-        self.image = GameObject_Sprites.coin # Sets the coin's image to the coin sprite from GameObject_Sprites.py.
+        self.image = Coin_Sprite.coin # Sets the coin's image to the coin sprite from Coin_Sprite.py.
         self.rect = Rect(x, y, 16, 16) # Setting the desired size of the coin's surface rect.
 
     # Collide the coin with platforms and entities, and animate it ()
@@ -777,27 +776,14 @@ class Platform(Entity):
     # Changing the level when Kim collides with the door.
     def change_level(self):
 
-        #self.counter_change = 1
-        # First, change the door sprite so it's open.
-        if self.counter_change == 1:
-            self.image = GameObject_Sprites.DoorOpen # Sets new image for door, using the open door sprite from GameObject_Sprites.py.
-
-        # Then, change the level/scene.
-        elif self.counter_change == 2:
-            # If Kim collided with the door on level three, player won the game, so go to GameOver screen.
-            if Globals.current_level == 3:
-                Globals.scene = "GameOver"
-            # Otherwise, increment the level and call the main function again.
-            else:
-                Globals.current_level += 1
-                main()
-                
-        self.counter_change += 1 # Incrementing counter_change so the door sprite changes and the level/scene changes.
- 
-"""
-    def update(self):
-        pass
-"""
+        # Change the level/scene.
+        # If Kim collided with the door on level three, player won the game, so go to GameOver screen.
+        if Globals.current_level == 3:
+            Globals.scene = "GameOver"
+        # Otherwise, increment the level and call the main function again.
+        else:
+            Globals.current_level += 1
+            main()
 
 main() # Calling the main function to initiate gameplay.
 pygame.quit() # Quit the game once the main function execution is complete.
