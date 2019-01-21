@@ -107,8 +107,8 @@ def main():
 
     # Checking for the current level and adding coins to coingroup, displaying player to screen.
     if Globals.current_level==1:
-        #player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
-        player = Kim(32*16, 32*4)
+        player = Kim(32*2, 32*14) # Creating an instance of the Kim class, displaying her in bottom left of the screen.
+        #player = Kim(32*16, 32*4)
         # Adding coins to coin group by creating instances of the coin class to different places on screen.
         coingroup.add(Coin(32*9, 32*14))
         coingroup.add(Coin(32*16, 32*13))
@@ -121,6 +121,7 @@ def main():
         coingroup.add(Coin(32*16, 32*3))
         coingroup.add(Coin(32*2, 32*13))
 
+        
         # Creating level list that will be iterated over.
         level = [
             "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
@@ -171,8 +172,8 @@ def main():
             "L                            L",
             "L                            L",
             "L                            L",
-            "L      R                R    L",
-            "PPCAADPPPPCAAADPPPCAADPPPCAPPP"]
+            "L      R                     L",
+            "PPCAADPPPPCAAADPPPCAADPPCAPPPP"]
 
     elif Globals.current_level == 3:
         # Repeating steps taken with level 1 and 2, with coins at new places on the screen and new level layout.
@@ -395,19 +396,6 @@ class Camera(object):
 def complex_camera(camera, target_rect):
     x, y, w, h = target_rect
     return Rect(HALF_WIDTH - x, HALF_HEIGHT - y, w, h)
-"""
-# The complex camera tracks entities from a fixed point of view.
-def complex_camera(camera, target_rect):
-    l, t, _, _ = target_rect
-    _, _, w, h = camera
-    l, t, _, _ = -l + HALF_WIDTH, -t + HALF_HEIGHT, w, h
-
-    l = min(0, l) 
-    l = max(-(camera.width - WIN_WIDTH), l)
-    t = max(-(camera.height - WIN_HEIGHT), t) 
-    t = min(0, t) 
-    return Rect(l, t, w, h)
-"""
 
 # Base class I will use for all my entities, which has properties of a Pygame sprite base class for all visible game objects.
 class Entity(pygame.sprite.Sprite):
@@ -443,7 +431,7 @@ class Kim(Entity):
 
         # Setting initial image as first standing sprite and surface rect at the same location as the player, with a specific size.
         self.image = Kim_Sprites.stand1
-        self.rect = Rect(x, y, 21*1.5, 52*1.5)
+        self.rect = Rect(x, y, 21*1.5, 49*1.5)
 
     # Updates Kim as she moves across the screen.
     def update(self, up, down, left, right, running, platforms):
@@ -461,11 +449,11 @@ class Kim(Entity):
                 pass
             # Move Kim to the left at a set x-velocity (negative because it's left) if the user presses the left arrow key.   
             if left:
-                self.xvel = -10   
+                self.xvel = -8
                 self.faceright = False # Kim should face left.
             # Move Kim to the right at a set x-velocity if the user presses the right arrow key.   
             if right:
-                self.xvel = 10
+                self.xvel = 8
                 self.faceright = True # Kim should face right. 
             # Move Kim down at a constant y-velocity if she is airborne.   
             if not self.onGround:
@@ -484,7 +472,8 @@ class Kim(Entity):
 
             # Increment Kim's vertical position as she moves.    
             self.rect.top += self.yvel
-            # Kim is in the air since she has jumped.    
+            
+            # Setting Kim's onGround variable to False for her update function.  
             self.onGround = False
 
             # Update Kim's health.
@@ -523,19 +512,19 @@ class Kim(Entity):
                     p.change_level()
                     self.level_transition = True
                     self.destroyed = True # Kim will be 
-                    self.rect.midbottom=p.rect.midbottom # Collide in the centre of the door.
+                    self.rect.midbottom = p.rect.midbottom # Collide in the centre of the door.
 
                 # Otherwise, perform certain actions based on what Kim collided with.
                 else:
                     # If Kim is not moving and facing right, collide her right side with the platform's left side.
                     if xvel == 0 and yvel == 0 and self.faceright:
                         self.rect.right = p.rect.left
-
+                    
                     # If Kim is moving right...
                     if xvel > 0:                        
                         self.rect.right = p.rect.left # Collide Kim's right side with the platform's left side.
-                        # If Kim collided with an acid or rock tile, update hear health and destroyed variables, and call the dead function.
-                        if p.tile=="A" or p.tile=="R":
+                        # If Kim collided with a lava or rock tile, update hear health and destroyed variables, and call the dead function.
+                        if p.tile=="A" or p.tile=="R":    
                             self.health=0
                             Globals.player_health = self.health
                             self.destroyed=True
@@ -544,8 +533,8 @@ class Kim(Entity):
                     # If Kim is moving left...
                     if xvel < 0:
                         self.rect.left = p.rect.right # Collide Kim's left side with the platform's right side.
-                        # If Kim collided with an acid or rock tile, update her health and destroyed variables, and call the dead function.                       
-                        if p.tile=="A" or p.tile=="R":
+                        # If Kim collided with a lava or rock tile, update her health and destroyed variables, and call the dead function.                       
+                        if p.tile=="A" or p.tile=="R":    
                             self.health = 0
                             Globals.player_health = self.health
                             self.destroyed = True
@@ -553,8 +542,8 @@ class Kim(Entity):
 
                     # If Kim is moving down...
                     if yvel > 0:
-                        # If Kim collided with an acid or rock tile, update her health and destroyed variables, and call the dead function.
-                        if p.tile=="A" or p.tile=="R":
+                        # If Kim collided with a lava or rock tile, update her health and destroyed variables, and call the dead function.
+                        if p.tile=="A" or p.tile=="R":    
                             self.health = 0
                             Globals.player_health = self.health
                             self.destroyed = True
@@ -620,49 +609,49 @@ class Kim(Entity):
         # The following uses the code written to a text file by SpriteMapping.py. The numbers between each check for counter_stand controls the speed of the animation.
         if self.counter_stand==1:
             self.updatecharacter(Kim_Sprites.stand1) # Updates the animated surface.
-            self.rect.size=(21*1.5, 52*1.5) # Defines the rect size of the surface.
+            self.rect.size=(21*1.5, 49*1.5) # Defines the rect size of the surface.
         elif self.counter_stand==4:
             self.updatecharacter(Kim_Sprites.stand2)
-            self.rect.size=(22*1.5, 52*1.5)
+            self.rect.size=(22*1.5, 49*1.5)
         elif self.counter_stand==7:
             self.updatecharacter(Kim_Sprites.stand3)
-            self.rect.size=(22*1.5,52*1.5)
+            self.rect.size=(22*1.5,49*1.5)
         elif self.counter_stand==10:
             self.updatecharacter(Kim_Sprites.stand4)
-            self.rect.size=(22*1.5,52*1.5)
+            self.rect.size=(22*1.5,49*1.5)
         elif self.counter_stand==13:
             self.updatecharacter(Kim_Sprites.stand5)
-            self.rect.size=(22*1.5,52*1.5)
+            self.rect.size=(22*1.5,49*1.5)
         elif self.counter_stand==16:
             self.updatecharacter(Kim_Sprites.stand6)
-            self.rect.size=(22*1.5,52*1.5)
+            self.rect.size=(22*1.5,49*1.5)
         elif self.counter_stand==19:
             self.updatecharacter(Kim_Sprites.stand7)
-            self.rect.size=(22*1.5, 52*1.5)
+            self.rect.size=(22*1.5, 49*1.5)
         elif self.counter_stand==22:
             self.updatecharacter(Kim_Sprites.stand8)
-            self.rect.size=(22*1.5, 52*1.5)
+            self.rect.size=(22*1.5, 49*1.5)
         elif self.counter_stand==25:
             self.updatecharacter(Kim_Sprites.stand9)
-            self.rect.size=(22*1.5,52*1.5)
+            self.rect.size=(22*1.5,49*1.5)
         elif self.counter_stand==28:
             self.updatecharacter(Kim_Sprites.stand10)
-            self.rect.size=(21*1.5,52*1.5)
+            self.rect.size=(21*1.5,49*1.5)
         elif self.counter_stand==31:
             self.updatecharacter(Kim_Sprites.stand11)
-            self.rect.size=(21*1.5,52*1.5)
+            self.rect.size=(21*1.5,49*1.5)
         elif self.counter_stand==34:
             self.updatecharacter(Kim_Sprites.stand12)
-            self.rect.size=(20*1.5,52*1.5)
+            self.rect.size=(20*1.5,49*1.5)
         elif self.counter_stand==37:
             self.updatecharacter(Kim_Sprites.stand13)
-            self.rect.size=(20*1.5,52*1.5)
+            self.rect.size=(20*1.5,49*1.5)
         elif self.counter_stand==40:
             self.updatecharacter(Kim_Sprites.stand14)
-            self.rect.size=(20*1.5,52*1.5)
+            self.rect.size=(20*1.5,49*1.5)
         elif self.counter_stand==43:
             self.updatecharacter(Kim_Sprites.stand15)
-            self.rect.size=(20*1.5,52*1.5)
+            self.rect.size=(20*1.5,49*1.5)
             self.counter_stand = 0 # Set counter_stand to 0 to re-loop through the animation.
         self.counter_stand += 1 # Increment counter_stand each time a sprite is displayed, to display the next sprite in the animation.
 
@@ -671,34 +660,34 @@ class Kim(Entity):
         # The following uses the code written to a text file by SpriteMapping.py. The numbers between each check for counter_stand controls the speed of the animation.
         if self.counter_run==1:
             self.updatecharacter(Kim_Sprites.run1) # Updates the animated surface.
-            self.rect.size=(36*1.5, 52*1.5) # Defines the rect size of the surface.
+            self.rect.size=(36*1.5, 49*1.5) # Defines the rect size of the surface.
         elif self.counter_run==2:
             self.updatecharacter(Kim_Sprites.run1)
-            self.rect.size=(36*1.5, 52*1.5)
+            self.rect.size=(36*1.5, 49*1.5)
         elif self.counter_run==3:
             self.updatecharacter(Kim_Sprites.run2)
-            self.rect.size=(29*1.5, 52*1.5)
+            self.rect.size=(29*1.5, 49*1.5)
         elif self.counter_run==4:
             self.updatecharacter(Kim_Sprites.run3)
-            self.rect.size=(35*1.5, 52*1.5)
+            self.rect.size=(35*1.5, 49*1.5)
         elif self.counter_run==5:
             self.updatecharacter(Kim_Sprites.run4)
-            self.rect.size=(45*1.5, 52*1.5)
+            self.rect.size=(45*1.5, 49*1.5)
         elif self.counter_run==6:
             self.updatecharacter(Kim_Sprites.run5)
-            self.rect.size=(48*1.5, 52*1.5)
+            self.rect.size=(48*1.5, 49*1.5)
         elif self.counter_run==7:
             self.updatecharacter(Kim_Sprites.run6)
-            self.rect.size=(34*1.5, 52*1.5)
+            self.rect.size=(34*1.5, 49*1.5)
         elif self.counter_run==8:
             self.updatecharacter(Kim_Sprites.run7)
-            self.rect.size=(29*1.5, 52*1.5)
+            self.rect.size=(29*1.5, 49*1.5)
         elif self.counter_run==9:
             self.updatecharacter(Kim_Sprites.run8)
-            self.rect.size=(35*1.5, 52*1.5)
+            self.rect.size=(35*1.5, 49*1.5)
         elif self.counter_run==10:
             self.updatecharacter(Kim_Sprites.run9)
-            self.rect.size=(52*1.5, 52*1.5)
+            self.rect.size=(52*1.5, 49*1.5)
         elif self.counter_run==11:
             self.counter_run = 0 # Set counter_run to 0 to re-loop through the animation.
         self.counter_run += 1 # Increment counter_run each time a sprite is displayed, to display the next sprite in the animation.
@@ -709,12 +698,12 @@ class Kim(Entity):
         if self.yvel < 0:
             #print("I entered")
             self.updatecharacter(Kim_Sprites.jump11) # Updates the animated surface.
-            self.rect.size=(int(33*1.5),int(52*1.5)) # Defines the rect size of the surface.
+            self.rect.size=(int(33*1.5),int(49*1.5)) # Defines the rect size of the surface.
         # If Kim's moving down, display the landing sprite. 
         elif self.yvel >= 0:
             #print("Im working")
             self.updatecharacter(Kim_Sprites.jump10)
-            self.rect.size=(int(32*1.5),int(52*1.5))
+            self.rect.size=(int(32*1.5),int(49*1.5))
 
 class Coin(Entity):
     def __init__(self, x, y):
@@ -792,7 +781,7 @@ class Platform(Entity):
         # First, change the door sprite so it's open.
         if self.counter_change == 1:
             self.image = GameObject_Sprites.DoorOpen # Sets new image for door, using the open door sprite from GameObject_Sprites.py.
-        
+
         # Then, change the level/scene.
         elif self.counter_change == 2:
             # If Kim collided with the door on level three, player won the game, so go to GameOver screen.
